@@ -42,6 +42,23 @@ function TarotQuestionnaire({ players }) {
     }
   };
 
+  const addPoint = () => setPoints((prev) => Math.min(prev + 1, 91));
+  const removePoint = () => setPoints((prev) => Math.max(prev - 1, 0));
+
+  const getTargetScore = () => {
+    switch (oudlers) {
+      case 0: return 56;
+      case 1: return 51;
+      case 2: return 41;
+      case 3: return 36;
+      default: return 0;
+    }
+  };
+
+  const target = getTargetScore();
+  const diff = points - target;
+  const contractWon = diff >= 0;
+
   const handleSubmit = () => {
     const result = {
       taker,
@@ -123,8 +140,23 @@ function TarotQuestionnaire({ players }) {
         </div>
       </div>
 
-      <label>
-        Points :
+      <div className="section">
+        <label>Points :</label>
+        <div className="score-control">
+          <button onClick={removePoint}>-</button>
+          <div className="score-summary">
+            <div>
+              Attaque : <strong style={{ color: contractWon ? 'green' : 'red' }}>{points}</strong>
+            </div>
+            <div>
+              Défense : <strong>{91 - points}</strong>
+            </div>
+            <div style={{ marginTop: '0.25rem', fontSize: '0.9rem', color: contractWon ? 'green' : 'red' }}>
+              {contractWon ? `+${diff}` : `${diff}`}
+            </div>
+          </div>
+          <button onClick={addPoint}>+</button>
+        </div>
         <input
           type="range"
           min="0"
@@ -132,8 +164,7 @@ function TarotQuestionnaire({ players }) {
           value={points}
           onChange={(e) => setPoints(Number(e.target.value))}
         />
-        {points}
-      </label>
+      </div>
 
       <label>
         Camp :
