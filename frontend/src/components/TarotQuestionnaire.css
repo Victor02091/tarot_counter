@@ -1,28 +1,69 @@
+/* TarotQuestionnaire.css */
+
+.section {
+  margin-bottom: 1.5rem;
+}
+
 .button-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-  }
-  
-  .button-group button {
-    flex: 1 1 45%;
-    padding: 0.5rem;
-    border: 1px solid #4f46e5;
-    background-color: white;
-    color: #4f46e5;
-    border-radius: 8px;
-    font-weight: 600;
-    transition: all 0.2s;
-  }
-  
-  .button-group button.selected {
-    background-color: #4f46e5;
-    color: white;
-  }
-  
-  .button-group button:hover {
-    background-color: #4338ca;
-    color: white;
-  }
-  
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.no-wrap-buttons {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.25rem;
+  justify-content: space-between;
+  overflow-x: auto;
+}
+
+.button-group button,
+.no-wrap-buttons button {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  border: 1px solid #4f46e5;
+  background-color: white;
+  color: #4f46e5;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.button-group button.selected,
+.no-wrap-buttons button.selected {
+  background-color: #4f46e5;
+  color: white;
+}
+
+.button-group button:hover,
+.no-wrap-buttons button:hover {
+  background-color: #4338ca;
+  color: white;
+}
+
+/* Optional enhancements */
+fieldset {
+  margin-bottom: 1.5rem;
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  border-radius: 8px;
+}
+
+legend {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+label {
+  font-weight: 600;
+  display: block;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}

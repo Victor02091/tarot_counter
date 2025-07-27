@@ -52,7 +52,7 @@ function TarotQuestionnaire({ players }) {
 
       <div className="section">
         <label>Taker:</label>
-        <div className="button-group">
+        <div className="button-group no-wrap-buttons">
           {players.map((p, i) => (
             <button
               key={i}
@@ -67,7 +67,7 @@ function TarotQuestionnaire({ players }) {
 
       <div className="section">
         <label>Called Player:</label>
-        <div className="button-group">
+        <div className="button-group no-wrap-buttons">
           {players.map((p, i) => (
             <button
               key={i}
@@ -135,7 +135,7 @@ function TarotQuestionnaire({ players }) {
 
       <fieldset>
         <legend>Misères d’atout</legend>
-        <div className="button-group">
+        <div className="button-group no-wrap-buttons">
           {players.map((p, i) => (
             <button
               key={i}
@@ -150,7 +150,7 @@ function TarotQuestionnaire({ players }) {
 
       <fieldset>
         <legend>Misères de tête</legend>
-        <div className="button-group">
+        <div className="button-group no-wrap-buttons">
           {players.map((p, i) => (
             <button
               key={i}
