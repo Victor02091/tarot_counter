@@ -4,25 +4,26 @@ import './TarotQuestionnaire.css';
 function TarotQuestionnaire({ players }) {
   const [taker, setTaker] = useState('');
   const [called, setCalled] = useState('');
+  const [contract, setContract] = useState('');
   const [oudlers, setOudlers] = useState(0);
   const [points, setPoints] = useState(50);
   const [side, setSide] = useState('attack');
   const [petit, setPetit] = useState(false);
-  const [poignees, setPoignees] = useState([]);
+  const [poignees, setPoignees] = useState({ simple: [], double: [], triple: [] });
   const [chlem, setChlem] = useState(false);
-  const [miseres, setMiseres] = useState({
-    atout: [],
-    tete: []
-  });
-
-  const togglePoignee = (value) => {
-    setPoignees((prev) =>
-      prev.includes(value) ? prev.filter((p) => p !== value) : [...prev, value]
-    );
-  };
+  const [miseres, setMiseres] = useState({ atout: [], tete: [] });
 
   const toggleMisere = (type, player) => {
     setMiseres((prev) => {
+      const updated = prev[type].includes(player)
+        ? prev[type].filter((p) => p !== player)
+        : [...prev[type], player];
+      return { ...prev, [type]: updated };
+    });
+  };
+
+  const togglePoignee = (type, player) => {
+    setPoignees((prev) => {
       const updated = prev[type].includes(player)
         ? prev[type].filter((p) => p !== player)
         : [...prev[type], player];
@@ -34,6 +35,7 @@ function TarotQuestionnaire({ players }) {
     const result = {
       taker,
       called,
+      contract,
       oudlers,
       points,
       side,
@@ -43,15 +45,15 @@ function TarotQuestionnaire({ players }) {
       miseres
     };
     console.log(result);
-    alert("Result submitted (check console)");
+    alert("Résultat soumis (voir console)");
   };
 
   return (
     <div>
-      <h2>Tarot Game Details</h2>
+      <h2>Détails de la partie de Tarot</h2>
 
       <div className="section">
-        <label>Taker:</label>
+        <label>Preneur :</label>
         <div className="button-group no-wrap-buttons">
           {players.map((p, i) => (
             <button
@@ -66,7 +68,7 @@ function TarotQuestionnaire({ players }) {
       </div>
 
       <div className="section">
-        <label>Called Player:</label>
+        <label>Joueur appelé :</label>
         <div className="button-group no-wrap-buttons">
           {players.map((p, i) => (
             <button
@@ -81,7 +83,22 @@ function TarotQuestionnaire({ players }) {
       </div>
 
       <div className="section">
-        <label>Number of Oudlers:</label>
+        <label>Contrat :</label>
+        <div className="button-group no-wrap-buttons">
+          {["Petite", "Garde", "Garde sans", "Garde contre"].map((c, i) => (
+            <button
+              key={i}
+              className={contract === c ? 'selected' : ''}
+              onClick={() => setContract(c)}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="section">
+        <label>Nombre d'oudlers :</label>
         <div className="button-group no-wrap-buttons">
           {[0, 1, 2, 3].map((n) => (
             <button
@@ -96,7 +113,7 @@ function TarotQuestionnaire({ players }) {
       </div>
 
       <label>
-        Points:
+        Points :
         <input
           type="range"
           min="0"
@@ -108,70 +125,92 @@ function TarotQuestionnaire({ players }) {
       </label>
 
       <label>
-        Side:
+        Camp :
         <select value={side} onChange={(e) => setSide(e.target.value)}>
-          <option value="attack">Attack</option>
-          <option value="defense">Defense</option>
+          <option value="attack">Attaque</option>
+          <option value="defense">Défense</option>
         </select>
       </label>
 
       <label>
-        Petit au bout:
+        Petit au bout :
         <input type="checkbox" checked={petit} onChange={(e) => setPetit(e.target.checked)} />
       </label>
 
       <fieldset>
         <legend>Poignées</legend>
+        <label>Simple (8 atouts):</label>
         <div className="button-group no-wrap-buttons">
-          {[10, 13, 15].map((n) => (
+          {players.map((p, i) => (
             <button
-              key={n}
-              className={poignees.includes(n) ? 'selected' : ''}
-              onClick={() => togglePoignee(n)}
+              key={`simple-${i}`}
+              className={poignees.simple.includes(p) ? 'selected' : ''}
+              onClick={() => togglePoignee('simple', p)}
             >
-              {n} cards
+              {p}
+            </button>
+          ))}
+        </div>
+        <label>Double (10 atouts):</label>
+        <div className="button-group no-wrap-buttons">
+          {players.map((p, i) => (
+            <button
+              key={`double-${i}`}
+              className={poignees.double.includes(p) ? 'selected' : ''}
+              onClick={() => togglePoignee('double', p)}
+            >
+              {p}
+            </button>
+          ))}
+        </div>
+        <label>Triple (13 atouts):</label>
+        <div className="button-group no-wrap-buttons">
+          {players.map((p, i) => (
+            <button
+              key={`triple-${i}`}
+              className={poignees.triple.includes(p) ? 'selected' : ''}
+              onClick={() => togglePoignee('triple', p)}
+            >
+              {p}
             </button>
           ))}
         </div>
       </fieldset>
 
       <label>
-        Chlem:
+        Chelem :
         <input type="checkbox" checked={chlem} onChange={(e) => setChlem(e.target.checked)} />
       </label>
 
       <fieldset>
         <legend>Misères</legend>
-        <div>
-          <div className="label">Misères d’atout:</div>
-          <div className="button-group no-wrap-buttons">
-            {players.map((p, i) => (
-              <button
-                key={"atout" + i}
-                className={miseres.atout.includes(p) ? 'selected' : ''}
-                onClick={() => toggleMisere('atout', p)}
-              >
-                {p}
-              </button>
-            ))}
-          </div>
-
-          <div className="label">Misères de tête:</div>
-          <div className="button-group no-wrap-buttons">
-            {players.map((p, i) => (
-              <button
-                key={"tete" + i}
-                className={miseres.tete.includes(p) ? 'selected' : ''}
-                onClick={() => toggleMisere('tete', p)}
-              >
-                {p}
-              </button>
-            ))}
-          </div>
+        <label>Misère d’atout :</label>
+        <div className="button-group no-wrap-buttons">
+          {players.map((p, i) => (
+            <button
+              key={`atout-${i}`}
+              className={miseres.atout.includes(p) ? 'selected' : ''}
+              onClick={() => toggleMisere('atout', p)}
+            >
+              {p}
+            </button>
+          ))}
+        </div>
+        <label>Misère de tête :</label>
+        <div className="button-group no-wrap-buttons">
+          {players.map((p, i) => (
+            <button
+              key={`tete-${i}`}
+              className={miseres.tete.includes(p) ? 'selected' : ''}
+              onClick={() => toggleMisere('tete', p)}
+            >
+              {p}
+            </button>
+          ))}
         </div>
       </fieldset>
 
-      <button onClick={handleSubmit}>Submit Game</button>
+      <button onClick={handleSubmit}>Valider la partie</button>
     </div>
   );
 }
