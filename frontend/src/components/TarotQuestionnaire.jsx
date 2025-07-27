@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import './TarotQuestionnaire.css';
 
 function TarotQuestionnaire({ players }) {
   const [taker, setTaker] = useState('');
@@ -10,14 +11,23 @@ function TarotQuestionnaire({ players }) {
   const [poignees, setPoignees] = useState([]);
   const [chlem, setChlem] = useState(false);
   const [miseres, setMiseres] = useState({
-    atout: false,
-    tete: false
+    atout: [],
+    tete: []
   });
 
   const togglePoignee = (value) => {
     setPoignees((prev) =>
-      prev.includes(value) ? prev.filter(p => p !== value) : [...prev, value]
+      prev.includes(value) ? prev.filter((p) => p !== value) : [...prev, value]
     );
+  };
+
+  const toggleMisere = (type, player) => {
+    setMiseres((prev) => {
+      const updated = prev[type].includes(player)
+        ? prev[type].filter((p) => p !== player)
+        : [...prev[type], player];
+      return { ...prev, [type]: updated };
+    });
   };
 
   const handleSubmit = () => {
@@ -40,26 +50,42 @@ function TarotQuestionnaire({ players }) {
     <div>
       <h2>Tarot Game Details</h2>
 
-      <label>
-        Taker:
-        <select value={taker} onChange={(e) => setTaker(e.target.value)}>
-          <option value="">--</option>
-          {players.map((p, i) => <option key={i} value={p}>{p}</option>)}
-        </select>
-      </label>
+      <div className="section">
+        <label>Taker:</label>
+        <div className="button-group">
+          {players.map((p, i) => (
+            <button
+              key={i}
+              className={taker === p ? 'selected' : ''}
+              onClick={() => setTaker(p)}
+            >
+              {p}
+            </button>
+          ))}
+        </div>
+      </div>
 
-      <label>
-        Called Player:
-        <select value={called} onChange={(e) => setCalled(e.target.value)}>
-          <option value="">--</option>
-          {players.map((p, i) => <option key={i} value={p}>{p}</option>)}
-        </select>
-      </label>
+      <div className="section">
+        <label>Called Player:</label>
+        <div className="button-group">
+          {players.map((p, i) => (
+            <button
+              key={i}
+              className={called === p ? 'selected' : ''}
+              onClick={() => setCalled(p)}
+            >
+              {p}
+            </button>
+          ))}
+        </div>
+      </div>
 
       <label>
         Number of Oudlers:
         <select value={oudlers} onChange={(e) => setOudlers(Number(e.target.value))}>
-          {[0, 1, 2, 3].map(n => <option key={n} value={n}>{n}</option>)}
+          {[0, 1, 2, 3].map((n) => (
+            <option key={n} value={n}>{n}</option>
+          ))}
         </select>
       </label>
 
@@ -90,7 +116,7 @@ function TarotQuestionnaire({ players }) {
 
       <fieldset>
         <legend>Poignées</legend>
-        {[10, 13, 15].map(n => (
+        {[10, 13, 15].map((n) => (
           <label key={n}>
             <input
               type="checkbox"
@@ -108,23 +134,33 @@ function TarotQuestionnaire({ players }) {
       </label>
 
       <fieldset>
-        <legend>Misères</legend>
-        <label>
-          Misère d’atout:
-          <input
-            type="checkbox"
-            checked={miseres.atout}
-            onChange={(e) => setMiseres({ ...miseres, atout: e.target.checked })}
-          />
-        </label>
-        <label>
-          Misère de tête:
-          <input
-            type="checkbox"
-            checked={miseres.tete}
-            onChange={(e) => setMiseres({ ...miseres, tete: e.target.checked })}
-          />
-        </label>
+        <legend>Misères d’atout</legend>
+        <div className="button-group">
+          {players.map((p, i) => (
+            <button
+              key={i}
+              className={miseres.atout.includes(p) ? 'selected' : ''}
+              onClick={() => toggleMisere('atout', p)}
+            >
+              {p}
+            </button>
+          ))}
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Misères de tête</legend>
+        <div className="button-group">
+          {players.map((p, i) => (
+            <button
+              key={i}
+              className={miseres.tete.includes(p) ? 'selected' : ''}
+              onClick={() => toggleMisere('tete', p)}
+            >
+              {p}
+            </button>
+          ))}
+        </div>
       </fieldset>
 
       <button onClick={handleSubmit}>Submit Game</button>
