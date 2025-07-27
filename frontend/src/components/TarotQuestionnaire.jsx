@@ -80,14 +80,20 @@ function TarotQuestionnaire({ players }) {
         </div>
       </div>
 
-      <label>
-        Number of Oudlers:
-        <select value={oudlers} onChange={(e) => setOudlers(Number(e.target.value))}>
+      <div className="section">
+        <label>Number of Oudlers:</label>
+        <div className="button-group no-wrap-buttons">
           {[0, 1, 2, 3].map((n) => (
-            <option key={n} value={n}>{n}</option>
+            <button
+              key={n}
+              className={oudlers === n ? 'selected' : ''}
+              onClick={() => setOudlers(n)}
+            >
+              {n}
+            </button>
           ))}
-        </select>
-      </label>
+        </div>
+      </div>
 
       <label>
         Points:
@@ -116,16 +122,17 @@ function TarotQuestionnaire({ players }) {
 
       <fieldset>
         <legend>Poignées</legend>
-        {[10, 13, 15].map((n) => (
-          <label key={n}>
-            <input
-              type="checkbox"
-              checked={poignees.includes(n)}
-              onChange={() => togglePoignee(n)}
-            />
-            {n} cards
-          </label>
-        ))}
+        <div className="button-group no-wrap-buttons">
+          {[10, 13, 15].map((n) => (
+            <button
+              key={n}
+              className={poignees.includes(n) ? 'selected' : ''}
+              onClick={() => togglePoignee(n)}
+            >
+              {n} cards
+            </button>
+          ))}
+        </div>
       </fieldset>
 
       <label>
@@ -134,32 +141,33 @@ function TarotQuestionnaire({ players }) {
       </label>
 
       <fieldset>
-        <legend>Misères d’atout</legend>
-        <div className="button-group no-wrap-buttons">
-          {players.map((p, i) => (
-            <button
-              key={i}
-              className={miseres.atout.includes(p) ? 'selected' : ''}
-              onClick={() => toggleMisere('atout', p)}
-            >
-              {p}
-            </button>
-          ))}
-        </div>
-      </fieldset>
+        <legend>Misères</legend>
+        <div>
+          <div className="label">Misères d’atout:</div>
+          <div className="button-group no-wrap-buttons">
+            {players.map((p, i) => (
+              <button
+                key={"atout" + i}
+                className={miseres.atout.includes(p) ? 'selected' : ''}
+                onClick={() => toggleMisere('atout', p)}
+              >
+                {p}
+              </button>
+            ))}
+          </div>
 
-      <fieldset>
-        <legend>Misères de tête</legend>
-        <div className="button-group no-wrap-buttons">
-          {players.map((p, i) => (
-            <button
-              key={i}
-              className={miseres.tete.includes(p) ? 'selected' : ''}
-              onClick={() => toggleMisere('tete', p)}
-            >
-              {p}
-            </button>
-          ))}
+          <div className="label">Misères de tête:</div>
+          <div className="button-group no-wrap-buttons">
+            {players.map((p, i) => (
+              <button
+                key={"tete" + i}
+                className={miseres.tete.includes(p) ? 'selected' : ''}
+                onClick={() => toggleMisere('tete', p)}
+              >
+                {p}
+              </button>
+            ))}
+          </div>
         </div>
       </fieldset>
 
