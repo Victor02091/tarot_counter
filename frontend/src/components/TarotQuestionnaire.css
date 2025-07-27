@@ -67,3 +67,10 @@ label {
   margin-top: 1rem;
   margin-bottom: 0.5rem;
 }
+.button-group.no-wrap-buttons button {
+  white-space: normal; /* permet les retours à la ligne */
+  max-width: 100%;     /* empêche que les boutons soient trop larges */
+  text-align: center;  /* centre le texte */
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+}
