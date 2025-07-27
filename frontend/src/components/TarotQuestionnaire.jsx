@@ -8,9 +8,10 @@ function TarotQuestionnaire({ players }) {
   const [oudlers, setOudlers] = useState(0);
   const [points, setPoints] = useState(50);
   const [side, setSide] = useState('attack');
-  const [petit, setPetit] = useState(false);
+  const [petitPlayer, setPetitPlayer] = useState('');
+  const [petitResult, setPetitResult] = useState('');
   const [poignees, setPoignees] = useState({ simple: [], double: [], triple: [] });
-  const [chlem, setChlem] = useState(false);
+  const [chlem, setChlem] = useState('');
   const [miseres, setMiseres] = useState({ atout: [], tete: [] });
 
   const toggleMisere = (type, player) => {
@@ -31,6 +32,16 @@ function TarotQuestionnaire({ players }) {
     });
   };
 
+  const togglePetit = (player) => {
+    if (petitPlayer !== player) {
+      setPetitPlayer(player);
+      setPetitResult('gagne');
+    } else {
+      setPetitResult(petitResult === 'gagne' ? 'perdu' : '');
+      if (petitResult === '') setPetitPlayer('');
+    }
+  };
+
   const handleSubmit = () => {
     const result = {
       taker,
@@ -39,7 +50,7 @@ function TarotQuestionnaire({ players }) {
       oudlers,
       points,
       side,
-      petit,
+      petit: { player: petitPlayer, result: petitResult },
       poignees,
       chlem,
       miseres
@@ -132,55 +143,59 @@ function TarotQuestionnaire({ players }) {
         </select>
       </label>
 
-      <label>
-        Petit au bout :
-        <input type="checkbox" checked={petit} onChange={(e) => setPetit(e.target.checked)} />
-      </label>
-
       <fieldset>
-        <legend>Poignées</legend>
-        <label>Simple (8 atouts):</label>
+        <legend>Petit au bout</legend>
         <div className="button-group no-wrap-buttons">
           {players.map((p, i) => (
             <button
-              key={`simple-${i}`}
-              className={poignees.simple.includes(p) ? 'selected' : ''}
-              onClick={() => togglePoignee('simple', p)}
+              key={`petit-${i}`}
+              className={petitPlayer === p ? (petitResult === 'gagne' ? 'success' : petitResult === 'perdu' ? 'danger' : 'selected') : ''}
+              onClick={() => togglePetit(p)}
             >
-              {p}
-            </button>
-          ))}
-        </div>
-        <label>Double (10 atouts):</label>
-        <div className="button-group no-wrap-buttons">
-          {players.map((p, i) => (
-            <button
-              key={`double-${i}`}
-              className={poignees.double.includes(p) ? 'selected' : ''}
-              onClick={() => togglePoignee('double', p)}
-            >
-              {p}
-            </button>
-          ))}
-        </div>
-        <label>Triple (13 atouts):</label>
-        <div className="button-group no-wrap-buttons">
-          {players.map((p, i) => (
-            <button
-              key={`triple-${i}`}
-              className={poignees.triple.includes(p) ? 'selected' : ''}
-              onClick={() => togglePoignee('triple', p)}
-            >
-              {p}
+              {p}<br />
+              {petitPlayer === p && petitResult === 'gagne' && <span style={{ color: 'green' }}>Gagné</span>}
+              {petitPlayer === p && petitResult === 'perdu' && <span style={{ color: 'red' }}>Perdu</span>}
             </button>
           ))}
         </div>
       </fieldset>
 
-      <label>
-        Chelem :
-        <input type="checkbox" checked={chlem} onChange={(e) => setChlem(e.target.checked)} />
-      </label>
+      <fieldset>
+        <legend>Poignées</legend>
+        {['simple', 'double', 'triple'].map((type, idx) => (
+          <div key={type}>
+            <label>
+              {type === 'simple' ? 'Simple (8 atouts)' : type === 'double' ? 'Double (10 atouts)' : 'Triple (13 atouts)'}
+            </label>
+            <div className="button-group no-wrap-buttons">
+              {players.map((p, i) => (
+                <button
+                  key={`${type}-${i}`}
+                  className={poignees[type].includes(p) ? 'selected' : ''}
+                  onClick={() => togglePoignee(type, p)}
+                >
+                  {p}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </fieldset>
+
+      <fieldset>
+        <legend>Chelem</legend>
+        <div className="button-group no-wrap-buttons">
+          {["Annoncé et passé", "Non annoncé et passé", "Annoncé et chuté"].map((option, i) => (
+            <button
+              key={i}
+              className={chlem === option ? 'selected' : ''}
+              onClick={() => setChlem(option)}
+            >
+              {option}
+            </button>
+          ))}
+        </div>
+      </fieldset>
 
       <fieldset>
         <legend>Misères</legend>
