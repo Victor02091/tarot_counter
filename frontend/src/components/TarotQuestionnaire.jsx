@@ -7,7 +7,6 @@ function TarotQuestionnaire({ players }) {
   const [contract, setContract] = useState('');
   const [oudlers, setOudlers] = useState(0);
   const [points, setPoints] = useState(50);
-  const [side, setSide] = useState('attack');
   const [petitPlayer, setPetitPlayer] = useState('');
   const [petitResult, setPetitResult] = useState('');
   const [poignees, setPoignees] = useState({ simple: [], double: [], triple: [] });
@@ -66,7 +65,6 @@ function TarotQuestionnaire({ players }) {
       contract,
       oudlers,
       points,
-      side,
       petit: { player: petitPlayer, result: petitResult },
       poignees,
       chlem,
@@ -140,39 +138,28 @@ function TarotQuestionnaire({ players }) {
         </div>
       </div>
 
-      <div className="section">
+      <div className="section points-section">
         <label>Points :</label>
-        <div className="score-control">
-          <button onClick={removePoint}>-</button>
-          <div className="score-summary">
-            <div>
-              Attaque : <strong style={{ color: contractWon ? 'green' : 'red' }}>{points}</strong>
-            </div>
-            <div>
-              Défense : <strong>{91 - points}</strong>
-            </div>
-            <div style={{ marginTop: '0.25rem', fontSize: '0.9rem', color: contractWon ? 'green' : 'red' }}>
-              {contractWon ? `+${diff}` : `${diff}`}
-            </div>
+        <div className="score-summary-inline">
+          <div>Attaque<br /><strong style={{ color: contractWon ? 'green' : 'red' }}>{points}</strong></div>
+          <div style={{ fontSize: '0.9rem', color: contractWon ? 'green' : 'red', margin: '0 1rem' }}>
+            {contractWon ? `+${diff}` : `${diff}`}
           </div>
-          <button onClick={addPoint}>+</button>
+          <div>Défense<br /><strong>{91 - points}</strong></div>
         </div>
-        <input
-          type="range"
-          min="0"
-          max="91"
-          value={points}
-          onChange={(e) => setPoints(Number(e.target.value))}
-        />
-      </div>
 
-      <label>
-        Camp :
-        <select value={side} onChange={(e) => setSide(e.target.value)}>
-          <option value="attack">Attaque</option>
-          <option value="defense">Défense</option>
-        </select>
-      </label>
+        <div className="score-control-inline">
+          <button className="round-button" onClick={removePoint}>-</button>
+          <input
+            type="range"
+            min="0"
+            max="91"
+            value={points}
+            onChange={(e) => setPoints(Number(e.target.value))}
+          />
+          <button className="round-button" onClick={addPoint}>+</button>
+        </div>
+      </div>
 
       <fieldset>
         <legend>Petit au bout</legend>
