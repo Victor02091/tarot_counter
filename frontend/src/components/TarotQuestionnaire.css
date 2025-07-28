@@ -77,15 +77,21 @@ label {
 
 .score-control-inline {
   display: flex;
-  align-items: center;
+  align-items: center; 
   gap: 0.5rem;
 }
 
+.score-control-inline input[type="range"] {
+  flex: 1;
+  min-width: 100px;
+  vertical-align: middle;
+  margin-top: 2rem; 
+}
 .score-summary-inline {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1.5rem; /* You can adjust spacing as needed */
+  gap: 1.5rem; 
   margin-bottom: 0.5rem;
   text-align: center;
 }
