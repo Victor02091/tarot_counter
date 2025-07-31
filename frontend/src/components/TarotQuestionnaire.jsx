@@ -10,8 +10,8 @@ function TarotQuestionnaire({ players }) {
   const [petitPlayer, setPetitPlayer] = useState('');
   const [petitResult, setPetitResult] = useState('');
   const [poignees, setPoignees] = useState({ simple: [], double: [], triple: [] });
-  const [chlem, setChlem] = useState('');
   const [miseres, setMiseres] = useState({ atout: [], tete: [] });
+  const [chlem, setChlem] = useState('');
 
   const toggleMisere = (type, player) => {
     setMiseres((prev) => {
@@ -67,8 +67,8 @@ function TarotQuestionnaire({ players }) {
       points,
       petit: { player: petitPlayer, result: petitResult },
       poignees,
+      miseres,
       chlem,
-      miseres
     };
     console.log(result);
     alert("Résultat soumis (voir console)");
@@ -215,20 +215,6 @@ function TarotQuestionnaire({ players }) {
         ))}
       </fieldset>
 
-      <fieldset>
-        <legend>Chelem</legend>
-        <div className="button-group no-wrap-buttons">
-          {["Annoncé et passé", "Non annoncé et passé", "Annoncé et chuté"].map((option, i) => (
-            <button
-              key={i}
-              className={chlem === option ? 'selected' : ''}
-              onClick={() => setChlem(option)}
-            >
-              {option}
-            </button>
-          ))}
-        </div>
-      </fieldset>
 
       <fieldset>
         <legend>Misères</legend>
@@ -253,6 +239,22 @@ function TarotQuestionnaire({ players }) {
               onClick={() => toggleMisere('tete', p)}
             >
               {p}
+            </button>
+          ))}
+        </div>
+      </fieldset>
+
+      
+      <fieldset>
+        <legend>Chelem</legend>
+        <div className="button-group no-wrap-buttons">
+          {["Annoncé et passé", "Non annoncé et passé", "Annoncé et chuté"].map((option, i) => (
+            <button
+              key={i}
+              className={chlem === option ? 'selected' : ''}
+              onClick={() => setChlem(option)}
+            >
+              {option}
             </button>
           ))}
         </div>
