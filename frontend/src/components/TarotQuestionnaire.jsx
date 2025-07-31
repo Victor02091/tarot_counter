@@ -72,6 +72,21 @@ function TarotQuestionnaire({ players }) {
     };
     console.log(result);
     alert("Résultat soumis (voir console)");
+
+    // Reset all states
+    setTaker('');
+    setCalled('');
+    setContract('');
+    setOudlers(0);
+    setPoints(50);
+    setPetitPlayer('');
+    setPetitResult('');
+    setPoignees({ simple: [], double: [], triple: [] });
+    setChlem('');
+    setMiseres({ atout: [], tete: [] });
+
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
