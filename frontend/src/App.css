@@ -6,7 +6,7 @@
 
 body {
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f0f2f5;
 }
 
@@ -16,7 +16,6 @@ body {
   justify-content: center;
 }
 
-
 .app-wrapper {
   display: flex;
   justify-content: center;
@@ -25,7 +24,6 @@ body {
   padding: 1rem;
   width: 100%;
 }
-
 
 .container {
   width: 100%;

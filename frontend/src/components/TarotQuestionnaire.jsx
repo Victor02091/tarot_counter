@@ -1,17 +1,21 @@
-import { useState } from 'react';
-import './TarotQuestionnaire.css';
+import { useState } from "react";
+import "./TarotQuestionnaire.css";
 
 function TarotQuestionnaire({ players }) {
-  const [taker, setTaker] = useState('');
-  const [called, setCalled] = useState('');
-  const [contract, setContract] = useState('');
+  const [taker, setTaker] = useState("");
+  const [called, setCalled] = useState("");
+  const [contract, setContract] = useState("");
   const [oudlers, setOudlers] = useState(0);
   const [points, setPoints] = useState(50);
-  const [petitPlayer, setPetitPlayer] = useState('');
-  const [petitResult, setPetitResult] = useState('');
-  const [poignees, setPoignees] = useState({ simple: [], double: [], triple: [] });
+  const [petitPlayer, setPetitPlayer] = useState("");
+  const [petitResult, setPetitResult] = useState("");
+  const [poignees, setPoignees] = useState({
+    simple: [],
+    double: [],
+    triple: [],
+  });
   const [miseres, setMiseres] = useState({ atout: [], tete: [] });
-  const [chlem, setChlem] = useState('');
+  const [chlem, setChlem] = useState("");
 
   const toggleMisere = (type, player) => {
     setMiseres((prev) => {
@@ -34,10 +38,10 @@ function TarotQuestionnaire({ players }) {
   const togglePetit = (player) => {
     if (petitPlayer !== player) {
       setPetitPlayer(player);
-      setPetitResult('gagne');
+      setPetitResult("gagne");
     } else {
-      setPetitResult(petitResult === 'gagne' ? 'perdu' : '');
-      if (petitResult === '') setPetitPlayer('');
+      setPetitResult(petitResult === "gagne" ? "perdu" : "");
+      if (petitResult === "") setPetitPlayer("");
     }
   };
 
@@ -46,11 +50,16 @@ function TarotQuestionnaire({ players }) {
 
   const getTargetScore = () => {
     switch (oudlers) {
-      case 0: return 56;
-      case 1: return 51;
-      case 2: return 41;
-      case 3: return 36;
-      default: return 0;
+      case 0:
+        return 56;
+      case 1:
+        return 51;
+      case 2:
+        return 41;
+      case 3:
+        return 36;
+      default:
+        return 0;
     }
   };
 
@@ -74,19 +83,19 @@ function TarotQuestionnaire({ players }) {
     alert("Résultat soumis (voir console)");
 
     // Reset all states
-    setTaker('');
-    setCalled('');
-    setContract('');
+    setTaker("");
+    setCalled("");
+    setContract("");
     setOudlers(0);
     setPoints(50);
-    setPetitPlayer('');
-    setPetitResult('');
+    setPetitPlayer("");
+    setPetitResult("");
     setPoignees({ simple: [], double: [], triple: [] });
-    setChlem('');
+    setChlem("");
     setMiseres({ atout: [], tete: [] });
 
     // Scroll to top
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -99,7 +108,7 @@ function TarotQuestionnaire({ players }) {
           {players.map((p, i) => (
             <button
               key={i}
-              className={taker === p ? 'selected' : ''}
+              className={taker === p ? "selected" : ""}
               onClick={() => setTaker(p)}
             >
               {p}
@@ -114,7 +123,7 @@ function TarotQuestionnaire({ players }) {
           {players.map((p, i) => (
             <button
               key={i}
-              className={called === p ? 'selected' : ''}
+              className={called === p ? "selected" : ""}
               onClick={() => setCalled(p)}
             >
               {p}
@@ -129,7 +138,7 @@ function TarotQuestionnaire({ players }) {
           {["Petite", "Garde", "Garde sans", "Garde contre"].map((c, i) => (
             <button
               key={i}
-              className={contract === c ? 'selected' : ''}
+              className={contract === c ? "selected" : ""}
               onClick={() => setContract(c)}
             >
               {c}
@@ -144,7 +153,7 @@ function TarotQuestionnaire({ players }) {
           {[0, 1, 2, 3].map((n) => (
             <button
               key={n}
-              className={oudlers === n ? 'selected' : ''}
+              className={oudlers === n ? "selected" : ""}
               onClick={() => setOudlers(n)}
             >
               {n}
@@ -156,15 +165,33 @@ function TarotQuestionnaire({ players }) {
       <div className="section points-section">
         <label>Points :</label>
         <div className="score-summary-inline">
-          <div>Attaque<br /><strong style={{ color: contractWon ? 'green' : 'red' }}>{points}</strong></div>
-          <div style={{ fontSize: '0.9rem', color: contractWon ? 'green' : 'red', margin: '0 1rem' }}>
+          <div>
+            Attaque
+            <br />
+            <strong style={{ color: contractWon ? "green" : "red" }}>
+              {points}
+            </strong>
+          </div>
+          <div
+            style={{
+              fontSize: "0.9rem",
+              color: contractWon ? "green" : "red",
+              margin: "0 1rem",
+            }}
+          >
             {contractWon ? `+${diff}` : `${diff}`}
           </div>
-          <div>Défense<br /><strong>{91 - points}</strong></div>
+          <div>
+            Défense
+            <br />
+            <strong>{91 - points}</strong>
+          </div>
         </div>
 
         <div className="score-control-inline">
-          <button className="round-button" onClick={removePoint}>-</button>
+          <button className="round-button" onClick={removePoint}>
+            -
+          </button>
           <input
             type="range"
             min="0"
@@ -172,7 +199,9 @@ function TarotQuestionnaire({ players }) {
             value={points}
             onChange={(e) => setPoints(Number(e.target.value))}
           />
-          <button className="round-button" onClick={addPoint}>+</button>
+          <button className="round-button" onClick={addPoint}>
+            +
+          </button>
         </div>
       </div>
 
@@ -182,12 +211,25 @@ function TarotQuestionnaire({ players }) {
           {players.map((p, i) => (
             <button
               key={`petit-${i}`}
-              className={petitPlayer === p ? (petitResult === 'gagne' ? 'success' : petitResult === 'perdu' ? 'danger' : 'selected') : ''}
+              className={
+                petitPlayer === p
+                  ? petitResult === "gagne"
+                    ? "success"
+                    : petitResult === "perdu"
+                    ? "danger"
+                    : "selected"
+                  : ""
+              }
               onClick={() => togglePetit(p)}
             >
-              {p}<br />
-              {petitPlayer === p && petitResult === 'gagne' && <span style={{ color: 'green' }}>Gagné</span>}
-              {petitPlayer === p && petitResult === 'perdu' && <span style={{ color: 'red' }}>Perdu</span>}
+              {p}
+              <br />
+              {petitPlayer === p && petitResult === "gagne" && (
+                <span style={{ color: "green" }}>Gagné</span>
+              )}
+              {petitPlayer === p && petitResult === "perdu" && (
+                <span style={{ color: "red" }}>Perdu</span>
+              )}
             </button>
           ))}
         </div>
@@ -195,16 +237,20 @@ function TarotQuestionnaire({ players }) {
 
       <fieldset>
         <legend>Poignées</legend>
-        {['simple', 'double', 'triple'].map((type, idx) => (
+        {["simple", "double", "triple"].map((type, idx) => (
           <div key={type}>
             <label>
-              {type === 'simple' ? 'Simple (8 atouts)' : type === 'double' ? 'Double (10 atouts)' : 'Triple (13 atouts)'}
+              {type === "simple"
+                ? "Simple (8 atouts)"
+                : type === "double"
+                ? "Double (10 atouts)"
+                : "Triple (13 atouts)"}
             </label>
             <div className="button-group no-wrap-buttons">
               {players.map((p, i) => (
                 <button
                   key={`${type}-${i}`}
-                  className={poignees[type].includes(p) ? 'selected' : ''}
+                  className={poignees[type].includes(p) ? "selected" : ""}
                   onClick={() => togglePoignee(type, p)}
                 >
                   {p}
@@ -215,7 +261,6 @@ function TarotQuestionnaire({ players }) {
         ))}
       </fieldset>
 
-
       <fieldset>
         <legend>Misères</legend>
         <label>Misère d’atout :</label>
@@ -223,8 +268,8 @@ function TarotQuestionnaire({ players }) {
           {players.map((p, i) => (
             <button
               key={`atout-${i}`}
-              className={miseres.atout.includes(p) ? 'selected' : ''}
-              onClick={() => toggleMisere('atout', p)}
+              className={miseres.atout.includes(p) ? "selected" : ""}
+              onClick={() => toggleMisere("atout", p)}
             >
               {p}
             </button>
@@ -235,8 +280,8 @@ function TarotQuestionnaire({ players }) {
           {players.map((p, i) => (
             <button
               key={`tete-${i}`}
-              className={miseres.tete.includes(p) ? 'selected' : ''}
-              onClick={() => toggleMisere('tete', p)}
+              className={miseres.tete.includes(p) ? "selected" : ""}
+              onClick={() => toggleMisere("tete", p)}
             >
               {p}
             </button>
@@ -244,19 +289,20 @@ function TarotQuestionnaire({ players }) {
         </div>
       </fieldset>
 
-      
       <fieldset>
         <legend>Chelem</legend>
         <div className="button-group no-wrap-buttons">
-          {["Annoncé et passé", "Non annoncé et passé", "Annoncé et chuté"].map((option, i) => (
-            <button
-              key={i}
-              className={chlem === option ? 'selected' : ''}
-              onClick={() => setChlem(option)}
-            >
-              {option}
-            </button>
-          ))}
+          {["Annoncé et passé", "Non annoncé et passé", "Annoncé et chuté"].map(
+            (option, i) => (
+              <button
+                key={i}
+                className={chlem === option ? "selected" : ""}
+                onClick={() => setChlem(option)}
+              >
+                {option}
+              </button>
+            )
+          )}
         </div>
       </fieldset>
 

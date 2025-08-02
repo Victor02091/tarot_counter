@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 function NewPartyForm({ onNext }) {
-  const [partyName, setPartyName] = useState('');
-  const [players, setPlayers] = useState(Array(5).fill(''));
+  const [partyName, setPartyName] = useState("");
+  const [players, setPlayers] = useState(Array(5).fill(""));
 
   const handleChange = (index, value) => {
     const updated = [...players];
@@ -15,7 +15,10 @@ function NewPartyForm({ onNext }) {
       <h2>Start a New Party</h2>
       <label>
         Party Name:
-        <input value={partyName} onChange={(e) => setPartyName(e.target.value)} />
+        <input
+          value={partyName}
+          onChange={(e) => setPartyName(e.target.value)}
+        />
       </label>
       <h3>Players:</h3>
       {players.map((name, i) => (
