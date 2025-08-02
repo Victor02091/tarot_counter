@@ -1,13 +1,13 @@
-[build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "french_tarot_counter"
 version = "0.1.0"
 description = "Backend of the french tarot counter full-stack application"
 readme = "README.md"
+authors = [
+    { name = "Victor Osso", email = "osso.victor@orange.fr" },
+]
 requires-python = ">=3.11"
+
 dependencies = [
     "fastapi>=0.116.1",
     "pandas>=2.3.1",
@@ -16,9 +16,49 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev-dependencies = [
+dev = [
     "ruff",
     "pytest",
     "pytest-cov",
     "ipykernel",
+]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["src*"]
+
+[tool.ruff]
+line-length = 79
+indent-width = 4
+include = ["**.py"]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.ruff.lint]
+extend-select = ["ALL"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**.py" = ["ANN", "D101", "D102", "D103", "ARG002"]
+
+[tool.pytest.ini_options]
+addopts = [
+    "-s",
+    "--cov=.",
+    "--cov-fail-under=0",
+]
+pythonpath = ["."]
+norecursedirs = ["tests/old_tests"]
+
+[tool.coverage.run]
+omit = [
+    "tests/*",
+    "__pycache__",
+    "notebooks/*",
+    "*__init__.py",
+    "config.py",
+    "config-3.py",
 ]
