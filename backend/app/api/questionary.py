@@ -6,6 +6,7 @@ from app.db.crud.questionary import create_questionnaire
 
 router = APIRouter(prefix="/questionnaire", tags=["questionnaire"])
 
+
 @router.post("/")
 def submit_questionnaire(
     data: QuestionnaireCreate, db: Session = Depends(get_db)
