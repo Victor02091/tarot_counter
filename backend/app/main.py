@@ -1,14 +1,6 @@
-from sqlalchemy import create_engine, text
+from fastapi import FastAPI
+from app.api import questionary
 
+app = FastAPI()
 
-def main():
-    DATABASE_URL = "postgresql+psycopg2://victor_user:victor_password@localhost:5432/tarot_db"
-    engine = create_engine(DATABASE_URL)
-
-    with engine.connect() as conn:
-        result = conn.execute(text("SELECT NOW();"))
-        print(result.fetchone())
-
-
-if __name__ == "__main__":
-    main()
+app.include_router(questionary.router, prefix="/api")
