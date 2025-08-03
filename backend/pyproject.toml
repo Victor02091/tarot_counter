@@ -40,6 +40,7 @@ docstring-code-format = true
 
 [tool.ruff.lint]
 extend-select = ["ALL"]
+extend-ignore = ["COM812","D213","D203"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**.py" = ["ANN", "D101", "D102", "D103", "ARG002"]
