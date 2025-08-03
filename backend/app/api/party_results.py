@@ -1,7 +1,10 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.schemas.party_results import PartyResultCreate, PartyResultInDB
-from app.db.crud.party_results import create_party_result, get_all_party_results
+from app.db.crud.party_results import (
+    create_party_result,
+    get_all_party_results,
+)
 from app.db.session import get_db
 from typing import List
 

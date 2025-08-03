@@ -67,7 +67,7 @@ function TarotQuestionnaire({ players }) {
   const diff = points - target;
   const contractWon = diff >= 0;
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const result = {
       taker,
       called,
@@ -79,24 +79,46 @@ function TarotQuestionnaire({ players }) {
       miseres,
       chlem,
     };
-    console.log(result);
-    alert("Résultat soumis (voir console)");
-
-    // Reset all states
-    setTaker("");
-    setCalled("");
-    setContract("");
-    setOudlers(0);
-    setPoints(50);
-    setPetitPlayer("");
-    setPetitResult("");
-    setPoignees({ simple: [], double: [], triple: [] });
-    setChlem("");
-    setMiseres({ atout: [], tete: [] });
-
-    // Scroll to top
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  
+    try {
+      const response = await fetch("http://localhost:8000/api/party-results/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(result),
+      });
+  
+      if (!response.ok) {
+        const err = await response.json();
+        console.error("Erreur lors de l'envoi:", err);
+        alert("Erreur lors de la soumission");
+        return;
+      }
+  
+      const data = await response.json();
+      console.log("Soumission réussie :", data);
+      alert("Résultat soumis !");
+  
+      // Reset all states
+      setTaker("");
+      setCalled("");
+      setContract("");
+      setOudlers(0);
+      setPoints(50);
+      setPetitPlayer("");
+      setPetitResult("");
+      setPoignees({ simple: [], double: [], triple: [] });
+      setChlem("");
+      setMiseres({ atout: [], tete: [] });
+  
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (err) {
+      console.error("Erreur réseau ou serveur :", err);
+      alert("Erreur réseau ou serveur");
+    }
   };
+  ;
 
   return (
     <div>

@@ -14,8 +14,10 @@ class PartyResultBase(BaseModel):
     oudlers: int
     points: int
     petit: Petit
-    poignees: Dict[str, List[str]]  # e.g., { "simple": ["Alice"], "double": [], "triple": [] }
-    miseres: Dict[str, List[str]]   # e.g., { "atout": ["Bob"], "tete": [] }
+    poignees: Dict[
+        str, List[str]
+    ]  # e.g., { "simple": ["Alice"], "double": [], "triple": [] }
+    miseres: Dict[str, List[str]]  # e.g., { "atout": ["Bob"], "tete": [] }
     chlem: Optional[str] = None
 
 

@@ -3,7 +3,9 @@ from app.models.party_results import PartyResult
 from app.schemas.party_results import PartyResultCreate
 
 
-def create_party_result(db: Session, party_result: PartyResultCreate) -> PartyResult:
+def create_party_result(
+    db: Session, party_result: PartyResultCreate
+) -> PartyResult:
     db_result = PartyResult(**party_result.dict())
     db.add(db_result)
     db.commit()
