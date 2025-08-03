@@ -1,12 +1,23 @@
-# React + Vite
+# Tarot counter Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend of the Tarot game result counter app, built with **React** and **Vite**.
 
-Currently, two official plugins are available:
+## 🛠️ Getting Started
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 1. Install dependencies
 
-## Expanding the ESLint configuration
+Make sure you're in the `frontend` directory , then run:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm install
+```
+
+### 2. Run the development server
+
+Start the app with:
+
+```bash
+npm run dev
+```
+
+By default, this will start the app at : [http://localhost:5173](http://localhost:5173)
