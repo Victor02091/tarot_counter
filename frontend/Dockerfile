@@ -1,12 +1,16 @@
 FROM node:20-alpine
 
+# Set working directory
 WORKDIR /app
 
-COPY frontend/package*.json ./
+# Install dependencies
+COPY package*.json ./
 RUN npm install
 
-COPY frontend/ ./
+# Copy app
+COPY . .
 
+# Expose frontend port
 EXPOSE 5173
 
 CMD ["npm", "run", "dev", "--", "--host"]

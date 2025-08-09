@@ -14,8 +14,8 @@ services:
 
   backend:
     build:
-      context: .
-      dockerfile: backend/Dockerfile
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: tarot-backend
     volumes:
       - ./backend:/app
@@ -26,10 +26,11 @@ services:
     ## environment:
     ##  - DATABASE_URL=postgresql://postgres:postgres@db:5432/tarot
 
+
   frontend:
     build:
-      context: .
-      dockerfile: frontend/Dockerfile
+      context: ./frontend
+      dockerfile: Dockerfile
     container_name: tarot-frontend
     volumes:
       - ./frontend:/app

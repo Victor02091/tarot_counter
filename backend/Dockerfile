@@ -14,14 +14,14 @@ RUN pip install --no-cache-dir uv
 WORKDIR /app
 
 # Copy uv.lock and pyproject.toml
-COPY backend/uv.lock .
-COPY backend/pyproject.toml .
+COPY uv.lock .
+COPY pyproject.toml .
 
 # Install dependencies using uv
 RUN uv sync --frozen --no-install-project
 
 # Copy the rest of the app
-COPY backend /app
+COPY . .
 
 # Expose FastAPI port
 EXPOSE 8000
