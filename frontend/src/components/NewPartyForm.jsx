@@ -12,25 +12,25 @@ function NewPartyForm({ onNext }) {
 
   return (
     <div>
-      <h2>Start a New Party</h2>
+      <h2>Démarrer une nouvelle partie</h2>
       <label>
-        Party Name:
+        Nom de la partie :
         <input
           value={partyName}
           onChange={(e) => setPartyName(e.target.value)}
         />
       </label>
-      <h3>Players:</h3>
+      <h3>Joueurs :</h3>
       {players.map((name, i) => (
         <div key={i}>
           <input
-            placeholder={`Player ${i + 1}`}
+            placeholder={`Joueur ${i + 1}`}
             value={name}
             onChange={(e) => handleChange(i, e.target.value)}
           />
         </div>
       ))}
-      <button onClick={() => onNext({ partyName, players })}>Continue</button>
+      <button onClick={() => onNext({ partyName, players })}>Continuer</button>
     </div>
   );
 }
