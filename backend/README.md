@@ -32,7 +32,15 @@ uv sync --extra=dev
 
 ### 2. Database migration (To be completed)
 
-If your database is new you can create all required tables using the command :
+Create a standard .env file and set your db address as DATABASE_URL.
+
+Exemple :
+
+```bash
+DATABASE_URL="postgresql+psycopg2://victor_user:victor_password@localhost:5432/tarot_db"
+```
+
+If your database is new, you can create all required tables using this command :
 
 ```bash
 uv run alembic upgrade head

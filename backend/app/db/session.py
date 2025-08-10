@@ -1,11 +1,14 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from dotenv import load_dotenv
+import os
 
-SQLALCHEMY_DATABASE_URL = (
-    "postgresql+psycopg2://victor_user:victor_password@db:5432/tarot_db"
-)
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+# Load database url
+load_dotenv()
+DATABASE_URL=os.getenv("DATABASE_URL")
+
+engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
