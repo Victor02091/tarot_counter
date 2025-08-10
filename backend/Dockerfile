@@ -21,7 +21,7 @@ COPY pyproject.toml .
 RUN uv sync --frozen --no-install-project
 
 # Copy the rest of the app
-COPY . .
+COPY /app .
 
 # Expose FastAPI port
 EXPOSE 8000
