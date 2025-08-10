@@ -69,6 +69,19 @@ function TarotQuestionnaire({ players }) {
   const contractWon = diff >= 0;
 
   const handleSubmit = async () => {
+    // --- Validation check ---
+    let missing = [];
+    if (!taker) missing.push("le preneur");
+    if (!called) missing.push("le joueur appelé");
+    if (!contract) missing.push("le contrat");
+
+    if (missing.length > 0) {
+      alert(
+        `Veuillez renseigner ${missing.join(", ").replace(/,([^,]*)$/, " et$1")} pour valider la partie.`
+      );
+      return;
+    }
+
     const result = {
       taker,
       called,
@@ -80,7 +93,7 @@ function TarotQuestionnaire({ players }) {
       miseres,
       chlem,
     };
-  
+
     try {
       await submitPartyResult(result);
       alert("Résultat soumis avec succès !");
@@ -89,7 +102,7 @@ function TarotQuestionnaire({ players }) {
       alert("Erreur lors de l'envoi du résultat");
       return;
     }
-  
+
     // Reset all states
     setTaker("");
     setCalled("");
@@ -101,11 +114,10 @@ function TarotQuestionnaire({ players }) {
     setPoignees({ simple: [], double: [], triple: [] });
     setMiseres({ atout: [], tete: [] });
     setChlem("");
-  
+
     // Scroll to top
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-  ;
 
   return (
     <div>
