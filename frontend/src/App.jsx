@@ -12,7 +12,7 @@ function App() {
     <div className="app-wrapper" style={{ color: "#111" }}>
       <div className="container">
         <h1 className="app-title" style={{ color: "#222" }}>
-          🎴 French Tarot Party
+          🎴 Compteur de tarot
         </h1>
         {step === "home" && <HomePage onStart={() => setStep("form")} />}
         {step === "form" && (
