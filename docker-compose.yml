@@ -15,21 +15,20 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
     container_name: tarot-backend
     volumes:
       - ./backend:/app
     ports:
       - "8000:8000"
     depends_on:
-      - db
+      migrate:
+        condition: service_completed_successfully
     environment:
       - DATABASE_URL=postgresql+psycopg2://victor_user:victor_password@db:5432/tarot_db
 
   migrate:
     build:
       context: ./backend
-      dockerfile: Dockerfile
     container_name: tarot-migrate
     command: uv run alembic upgrade head
     depends_on:
@@ -42,7 +41,6 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
     container_name: tarot-frontend
     volumes:
       - ./frontend:/app
