@@ -13,7 +13,7 @@ function HomePage({ onStart }) {
   return (
     <div>
       <button onClick={onStart}>Nouvelle partie</button>
-      <button onClick={() => setShowAddPlayer(true)}>Ajouter un joueur</button>
+      <button onClick={() => setShowAddPlayer(true)}>Créer un nouveau profil de joueur</button>
 
       {showAddPlayer && (
         <AddPlayerForm

@@ -1,13 +1,21 @@
 import { useState } from "react";
+import AddPlayerForm from "./AddPlayerForm";
 
 function NewPartyForm({ onNext }) {
   const [partyName, setPartyName] = useState("");
   const [players, setPlayers] = useState(Array(5).fill(""));
+  const [showAddPlayer, setShowAddPlayer] = useState(false);
 
   const handleChange = (index, value) => {
     const updated = [...players];
     updated[index] = value;
     setPlayers(updated);
+  };
+
+  const handleAddPlayer = (player) => {
+    alert(`Nouveau profil créé: ${player.firstName} ${player.lastName}`);
+    setShowAddPlayer(false);
+    // Here you could also automatically assign this new player to one of the 5 fields later
   };
 
   return (
@@ -20,6 +28,9 @@ function NewPartyForm({ onNext }) {
           onChange={(e) => setPartyName(e.target.value)}
         />
       </label>
+
+
+
       <h3>Joueurs :</h3>
       {players.map((name, i) => (
         <div key={i}>
@@ -30,6 +41,22 @@ function NewPartyForm({ onNext }) {
           />
         </div>
       ))}
+
+      {/* Button to create new player */}
+      <div style={{ margin: "1rem 0" }}>
+        <button type="button" onClick={() => setShowAddPlayer(true)}>
+          Créer un nouveau profil de joueur
+        </button>
+      </div>
+
+      {/* AddPlayerForm modal */}
+      {showAddPlayer && (
+        <AddPlayerForm
+          onCancel={() => setShowAddPlayer(false)}
+          onSubmit={handleAddPlayer}
+        />
+      )}
+      
       <button onClick={() => onNext({ partyName, players })}>Continuer</button>
     </div>
   );
