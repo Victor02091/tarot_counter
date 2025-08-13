@@ -18,6 +18,7 @@ services:
     container_name: tarot-backend
     volumes:
       - ./backend:/app
+      - /app/.venv # Avoid linking local .venv
     ports:
       - "8000:8000"
     depends_on:
@@ -35,6 +36,7 @@ services:
       - db
     volumes:
       - ./backend:/app
+      - /app/.venv # Avoid linking local .venv
     environment:
       - DATABASE_URL=postgresql+psycopg2://victor_user:victor_password@db:5432/tarot_db
 
@@ -44,7 +46,7 @@ services:
     container_name: tarot-frontend
     volumes:
       - ./frontend:/app
-      - /app/node_modules
+      - /app/node_modules # Avoid linking local modules
     ports:
       - "5173:5173"
     depends_on:
