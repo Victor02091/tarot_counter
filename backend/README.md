@@ -40,7 +40,7 @@ Exemple :
 DATABASE_URL="postgresql+psycopg2://victor_user:victor_password@localhost:5432/tarot_db"
 ```
 
-If your database is new, you can create all required tables using this command :
+If your database is new, you can create all required tables using this command (make sure your db is accessible):
 
 ```bash
 uv run alembic upgrade head
@@ -58,3 +58,19 @@ uv run uvicorn app.main:app --host 0.0.0.0 --port 8000
 By default, this will start the app api at : [http://localhost:8000](http://localhost:8000)
 
 You can acess the swagger at [http://localhost:8000/docs](http://localhost:8000/docs)
+
+### Modify table schemas
+
+If you make a change in SQL Alchemy models, you want to update to structure of the tables (make your your db is accessible).
+
+You need to commit the changes to alembic :
+
+```bash
+alembic revision -m "commit message" --autogenerate
+```
+
+And update your db tables :
+
+```bash
+uv run alembic upgrade head
+```
