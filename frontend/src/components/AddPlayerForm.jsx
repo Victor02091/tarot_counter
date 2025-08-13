@@ -1,22 +1,34 @@
 import { useState } from "react";
+import { addPlayer } from "../services/api"; // import the new function
 
 function AddPlayerForm({ onCancel, onSubmit }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!firstName || !lastName) {
       alert("Veuillez remplir le prénom et le nom.");
       return;
     }
 
-    // Return the new player
-    onSubmit({ firstName, lastName });
+    const newPlayer = { first_name: firstName, last_name: lastName };
+    await addPlayer(newPlayer);
+    setLoading(true);
 
-    // Reset form
-    setFirstName("");
-    setLastName("");
+    try {
+      const savedPlayer = await addPlayer(newPlayer);
+      alert("Joueur ajouté avec succès !");
+      onSubmit(savedPlayer); // return the created player to parent
+      setFirstName("");
+      setLastName("");
+    } catch (err) {
+      console.error("Erreur lors de l'ajout du joueur :", err);
+      alert("Erreur lors de l'ajout du joueur");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -29,6 +41,7 @@ function AddPlayerForm({ onCancel, onSubmit }) {
             type="text"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
+            disabled={loading}
           />
         </div>
         <div>
@@ -37,11 +50,14 @@ function AddPlayerForm({ onCancel, onSubmit }) {
             type="text"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
+            disabled={loading}
           />
         </div>
         <div className="form-buttons">
-          <button type="submit">Ajouter</button>
-          <button type="button" onClick={onCancel}>
+          <button type="submit" disabled={loading}>
+            {loading ? "Ajout en cours..." : "Ajouter"}
+          </button>
+          <button type="button" onClick={onCancel} disabled={loading}>
             Annuler
           </button>
         </div>
