@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from app.api import questionary
 from app.api import party_results
+from app.api import player
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -14,6 +15,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-app.include_router(questionary.router, prefix="/api")
-app.include_router(party_results.router, prefix="/api")
+prefix="/api"
+app.include_router(questionary.router, prefix=prefix)
+app.include_router(party_results.router, prefix=prefix)
+app.include_router(player.router, prefix=prefix)
