@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { addPlayer } from "../services/api"; // import the new function
+import { addPlayer } from "../services/api";
 
 function AddPlayerForm({ onCancel, onSubmit }) {
   const [firstName, setFirstName] = useState("");
@@ -8,19 +8,19 @@ function AddPlayerForm({ onCancel, onSubmit }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!firstName || !lastName) {
       alert("Veuillez remplir le prénom et le nom.");
       return;
     }
 
     const newPlayer = { first_name: firstName, last_name: lastName };
-    await addPlayer(newPlayer);
     setLoading(true);
 
     try {
-      const savedPlayer = await addPlayer(newPlayer);
+      const savedPlayer = await addPlayer(newPlayer); // ✅ only one call here
       alert("Joueur ajouté avec succès !");
-      onSubmit(savedPlayer); // return the created player to parent
+      onSubmit(savedPlayer); // send player to parent
       setFirstName("");
       setLastName("");
     } catch (err) {
