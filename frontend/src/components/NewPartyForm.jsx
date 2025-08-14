@@ -102,21 +102,28 @@ function NewPartyForm({ onNext }) {
       </label>
 
       <h3>Joueurs :</h3>
-      {players.map((selectedId, i) => (
-        <div key={i}>
-          <select
-            value={selectedId}
-            onChange={(e) => handleChange(i, e.target.value)}
-          >
-            <option value="">Sélectionnez un joueur</option>
-            {allPlayers.map((player) => (
-              <option key={player.id} value={String(player.id)}>
-                {player.first_name} {player.last_name}
-              </option>
-            ))}
-          </select>
-        </div>
-      ))}
+      {players.map((selectedId, i) => {
+        // Compute IDs already selected in other dropdowns
+        const selectedOtherIds = players.filter((_, idx) => idx !== i);
+
+        return (
+          <div key={i}>
+            <select
+              value={selectedId}
+              onChange={(e) => handleChange(i, e.target.value)}
+            >
+              <option value="">Sélectionnez un joueur</option>
+              {allPlayers
+                .filter((player) => !selectedOtherIds.includes(String(player.id)))
+                .map((player) => (
+                  <option key={player.id} value={String(player.id)}>
+                    {player.first_name} {player.last_name}
+                  </option>
+                ))}
+            </select>
+          </div>
+        );
+      })}
 
       {/* Button to create new player */}
       <div style={{ margin: "1rem 0" }}>
