@@ -61,7 +61,7 @@ You can acess the swagger at [http://localhost:8000/docs](http://localhost:8000/
 
 ## Modify table schemas
 
-If you make a change in SQL Alchemy models, you want to update to structure of the tables (make your your db is accessible).
+If you make a change in SQL Alchemy models, you want to update the structure of the tables (make sure your db is accessible).
 
 You need to commit the changes to alembic :
 
