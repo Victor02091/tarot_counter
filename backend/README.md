@@ -30,7 +30,7 @@ Make sure you're in the `backend` directory , then run:
 uv sync --extra=dev
 ```
 
-### 2. Database migration (To be completed)
+### 2. Database migration
 
 Create a standard .env file and set your db address as DATABASE_URL.
 
@@ -46,7 +46,7 @@ If your database is new, you can create all required tables using this command (
 uv run alembic upgrade head
 ```
 
-### Start the app api
+## Start the app api
 
 Start the app with:
 
@@ -59,7 +59,7 @@ By default, this will start the app api at : [http://localhost:8000](http://loca
 
 You can acess the swagger at [http://localhost:8000/docs](http://localhost:8000/docs)
 
-### Modify table schemas
+## Modify table schemas
 
 If you make a change in SQL Alchemy models, you want to update to structure of the tables (make your your db is accessible).
 
