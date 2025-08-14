@@ -45,16 +45,49 @@ function NewPartyForm({ onNext }) {
     );
   };
 
-  const toFullName = (p) => `${p.first_name} ${p.last_name}`.trim();
-
   const handleContinue = () => {
-    const playerNames = players
+    const selectedPlayers = players
       .map((id) => {
         const found = allPlayers.find((pl) => String(pl.id) === String(id));
-        return found ? toFullName(found) : "";
+        return found ? { first: found.first_name, last: found.last_name } : null;
       })
-      .filter(Boolean); // remove empty slots so the questionnaire doesn't get blank buttons
-    onNext({ partyName, players: playerNames });
+      .filter(Boolean); // remove empty slots
+
+    // Step 1: start with first names
+    let displayNames = selectedPlayers.map((p) => p.first);
+
+    // Step 2: resolve duplicates by adding letters from last name
+    let letterCount = 1;
+    let duplicatesExist = true;
+
+    while (duplicatesExist) {
+      const seen = new Map();
+      duplicatesExist = false;
+
+      displayNames = displayNames.map((name, idx) => {
+        const p = selectedPlayers[idx];
+        if (seen.has(name)) {
+          // Already seen → need to expand last name for both
+          duplicatesExist = true;
+
+          // Update the previous occurrence too
+          const prevIdx = seen.get(name);
+          displayNames[prevIdx] = `${selectedPlayers[prevIdx].first} ${selectedPlayers[prevIdx].last.slice(0, letterCount)}.`;
+
+          // Return updated for current one
+          return `${p.first} ${p.last.slice(0, letterCount)}.`;
+        } else {
+          seen.set(name, idx);
+          return name;
+        }
+      });
+
+      if (duplicatesExist) {
+        letterCount++;
+      }
+    }
+
+    onNext({ partyName, players: displayNames });
   };
 
   return (
