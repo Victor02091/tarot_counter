@@ -45,7 +45,7 @@ function NewPartyForm({ onNext }) {
   };
 
   const handleContinue = () => {
-    if (players.some((id) => id === "")) return; // button is disabled anyway
+    if (players.some((id) => id === "")) return;
 
     const selectedPlayers = players
       .map((id) => {
@@ -125,14 +125,16 @@ function NewPartyForm({ onNext }) {
           })}
         </div>
 
-        {/* Add player button */}
-        <div style={{ margin: "1rem 0" }}>
-          <button type="button" onClick={() => setShowAddPlayer(true)}>
-            Créer un nouveau profil de joueur
-          </button>
-        </div>
+        {/* Add player button, hidden if adding */}
+        {!showAddPlayer && (
+          <div style={{ margin: "1rem 0" }}>
+            <button type="button" onClick={() => setShowAddPlayer(true)}>
+              Créer un nouveau profil de joueur
+            </button>
+          </div>
+        )}
 
-        {/* Add player form modal */}
+        {/* Add player form */}
         {showAddPlayer && (
           <AddPlayerForm
             onCancel={() => setShowAddPlayer(false)}
