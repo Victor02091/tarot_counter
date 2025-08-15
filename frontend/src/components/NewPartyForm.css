@@ -1,0 +1,8 @@
+.players-grid select {
+    padding: 1rem 1.2rem;   /* more space inside */
+    font-size: 1.25rem;     /* bigger text */
+    border-width: 2px;      /* thicker border */
+    border-radius: 6px;     /* optional rounding */
+    min-height: 3rem;       /* force bigger height */
+  }
+  

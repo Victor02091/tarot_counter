@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import AddPlayerForm from "./AddPlayerForm";
 import { getPlayers } from "../services/api";
-
+import "./NewPartyForm.css";
 
 function NewPartyForm({ onNext }) {
   const [partyName, setPartyName] = useState("");
@@ -114,7 +114,7 @@ function NewPartyForm({ onNext }) {
                 onChange={(e) => handleChange(i, e.target.value)}
               >
                 <option value="">
-                  Sélectionnez le joueur {i + 1}
+                  Joueur {i + 1}
                 </option>
                 {allPlayers
                   .filter((player) => !selectedOtherIds.includes(String(player.id)))
