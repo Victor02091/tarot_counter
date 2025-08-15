@@ -45,10 +45,7 @@ function NewPartyForm({ onNext }) {
   };
 
   const handleContinue = () => {
-    if (players.some((id) => id === "")) {
-      alert("Veuillez sélectionner les 5 joueurs avant de continuer.");
-      return;
-    }
+    if (players.some((id) => id === "")) return; // button is disabled anyway
 
     const selectedPlayers = players
       .map((id) => {
@@ -79,13 +76,13 @@ function NewPartyForm({ onNext }) {
         }
       });
 
-      if (duplicatesExist) {
-        letterCount++;
-      }
+      if (duplicatesExist) letterCount++;
     }
 
     onNext({ partyName, players: displayNames });
   };
+
+  const allPlayersSelected = !players.some((id) => id === "");
 
   return (
     <div>
@@ -100,7 +97,7 @@ function NewPartyForm({ onNext }) {
         />
       </label>
 
-      {/* Players selection in a square box */}
+      {/* Players selection */}
       <fieldset className="players-fieldset">
         <legend>Joueurs</legend>
         <div className="players-grid">
@@ -145,7 +142,13 @@ function NewPartyForm({ onNext }) {
       </fieldset>
 
       {/* Continue button */}
-      <button onClick={handleContinue}>Continuer</button>
+      <button
+        onClick={handleContinue}
+        disabled={!allPlayersSelected}
+        className={allPlayersSelected ? "active-button" : "disabled-button"}
+      >
+        Commencer la partie
+      </button>
     </div>
   );
 }

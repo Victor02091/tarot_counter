@@ -6,3 +6,15 @@
     min-height: 3rem;       /* force bigger height */
   }
   
+  /* Disabled continue button */
+button.disabled-button {
+    background-color: #e0e0e0;  /* soft light grey */
+    color: #888;                /* subtle grey text */
+    cursor: not-allowed;
+    border: none;               /* remove big borders */
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+  }
+  
