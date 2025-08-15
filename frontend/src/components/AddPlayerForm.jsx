@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { addPlayer } from "../services/api";
+import "./AddPlayerForm.css"; // make sure you have this
 
 function AddPlayerForm({ onCancel, onSubmit }) {
   const [firstName, setFirstName] = useState("");
@@ -9,18 +10,15 @@ function AddPlayerForm({ onCancel, onSubmit }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!firstName || !lastName) {
-      alert("Veuillez remplir le prénom et le nom.");
-      return;
-    }
+    if (!firstName || !lastName) return; // button is disabled anyway
 
     const newPlayer = { first_name: firstName, last_name: lastName };
     setLoading(true);
 
     try {
-      const savedPlayer = await addPlayer(newPlayer); // ✅ only one call here
+      const savedPlayer = await addPlayer(newPlayer);
       alert("Joueur ajouté avec succès !");
-      onSubmit(savedPlayer); // send player to parent
+      onSubmit(savedPlayer);
       setFirstName("");
       setLastName("");
     } catch (err) {
@@ -30,6 +28,8 @@ function AddPlayerForm({ onCancel, onSubmit }) {
       setLoading(false);
     }
   };
+
+  const isDisabled = loading || !firstName || !lastName;
 
   return (
     <div className="add-player-form">
@@ -54,7 +54,11 @@ function AddPlayerForm({ onCancel, onSubmit }) {
           />
         </div>
         <div className="form-buttons">
-          <button type="submit" disabled={loading}>
+          <button
+            type="submit"
+            disabled={isDisabled}
+            className={isDisabled ? "disabled-button" : "active-button"}
+          >
             {loading ? "Ajout en cours..." : "Ajouter"}
           </button>
           <button type="button" onClick={onCancel} disabled={loading}>
