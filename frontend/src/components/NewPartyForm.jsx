@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import AddPlayerForm from "./AddPlayerForm";
-import { getPlayers } from "../services/api";
+import { getPlayers, createGameSession } from "../services/api"; // ⬅️ import
 import "./NewPartyForm.css";
 
 function NewPartyForm({ onNext }) {
@@ -44,42 +44,54 @@ function NewPartyForm({ onNext }) {
     );
   };
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (players.some((id) => id === "")) return;
 
-    const selectedPlayers = players
-      .map((id) => {
-        const found = allPlayers.find((pl) => String(pl.id) === String(id));
-        return found ? { first: found.first_name, last: found.last_name } : null;
-      })
-      .filter(Boolean);
+    try {
+      // ⬅️ create the session in backend
+      const session = await createGameSession({ name: partyName || null });
 
-    let displayNames = selectedPlayers.map((p) => p.first);
+      const selectedPlayers = players
+        .map((id) => {
+          const found = allPlayers.find((pl) => String(pl.id) === String(id));
+          return found ? { first: found.first_name, last: found.last_name } : null;
+        })
+        .filter(Boolean);
 
-    let letterCount = 1;
-    let duplicatesExist = true;
+      let displayNames = selectedPlayers.map((p) => p.first);
 
-    while (duplicatesExist) {
-      const seen = new Map();
-      duplicatesExist = false;
+      let letterCount = 1;
+      let duplicatesExist = true;
 
-      displayNames = displayNames.map((name, idx) => {
-        const p = selectedPlayers[idx];
-        if (seen.has(name)) {
-          duplicatesExist = true;
-          const prevIdx = seen.get(name);
-          displayNames[prevIdx] = `${selectedPlayers[prevIdx].first} ${selectedPlayers[prevIdx].last.slice(0, letterCount)}.`;
-          return `${p.first} ${p.last.slice(0, letterCount)}.`;
-        } else {
-          seen.set(name, idx);
-          return name;
-        }
+      while (duplicatesExist) {
+        const seen = new Map();
+        duplicatesExist = false;
+
+        displayNames = displayNames.map((name, idx) => {
+          const p = selectedPlayers[idx];
+          if (seen.has(name)) {
+            duplicatesExist = true;
+            const prevIdx = seen.get(name);
+            displayNames[prevIdx] = `${selectedPlayers[prevIdx].first} ${selectedPlayers[prevIdx].last.slice(0, letterCount)}.`;
+            return `${p.first} ${p.last.slice(0, letterCount)}.`;
+          } else {
+            seen.set(name, idx);
+            return name;
+          }
+        });
+
+        if (duplicatesExist) letterCount++;
+      }
+
+      // ⬅️ pass the session id forward
+      onNext({ 
+        partyName: session.name, 
+        sessionId: session.id, 
+        players: displayNames 
       });
-
-      if (duplicatesExist) letterCount++;
+    } catch (err) {
+      alert("Erreur lors de la création de la partie: " + err.message);
     }
-
-    onNext({ partyName, players: displayNames });
   };
 
   const allPlayersSelected = !players.some((id) => id === "");
@@ -125,7 +137,6 @@ function NewPartyForm({ onNext }) {
           })}
         </div>
 
-        {/* Add player button, hidden if adding */}
         {!showAddPlayer && (
           <div style={{ margin: "1rem 0" }}>
             <button type="button" onClick={() => setShowAddPlayer(true)}>
@@ -134,7 +145,6 @@ function NewPartyForm({ onNext }) {
           </div>
         )}
 
-        {/* Add player form */}
         {showAddPlayer && (
           <AddPlayerForm
             onCancel={() => setShowAddPlayer(false)}
@@ -143,7 +153,6 @@ function NewPartyForm({ onNext }) {
         )}
       </fieldset>
 
-      {/* Continue button */}
       <button
         onClick={handleContinue}
         disabled={!allPlayersSelected}

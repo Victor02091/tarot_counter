@@ -53,3 +53,20 @@ export async function getPlayers() {
 
   return players;
 }
+
+export async function createGameSession(session) {
+  const res = await fetch(`${API_URL}/game-sessions/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(session),
+  });
+
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.detail || "Erreur serveur");
+  }
+
+  return await res.json();
+}
