@@ -25,7 +25,7 @@ class PartyResultCreate(PartyResultBase):
     pass
 
 
-class PartyResultInDB(PartyResultBase):
+class PartyResultRead(PartyResultBase):
     id: int
 
     class Config:
