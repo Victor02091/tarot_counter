@@ -1,9 +1,15 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from datetime import datetime
 from typing import Optional
 
 class GameSessionBase(BaseModel):
     name: Optional[str] = None
+
+    # Normalize fields
+    @field_validator("name")
+    def normalize_name(cls, v: str) -> str:
+        if v:
+            return v.strip().capitalize()
 
 class GameSessionCreate(GameSessionBase):
     pass
