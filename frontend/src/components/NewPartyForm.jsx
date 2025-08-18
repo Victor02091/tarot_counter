@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import AddPlayerForm from "./AddPlayerForm";
-import { getPlayers, createGameSession } from "../services/api"; // ⬅️ import
+import { getPlayers, createGameSession } from "../services/api";
 import "./NewPartyForm.css";
 
 function NewPartyForm({ onNext }) {
@@ -48,17 +48,13 @@ function NewPartyForm({ onNext }) {
     if (players.some((id) => id === "")) return;
 
     try {
-      // ⬅️ create the session in backend
       const session = await createGameSession({ name: partyName || null });
 
       const selectedPlayers = players
-        .map((id) => {
-          const found = allPlayers.find((pl) => String(pl.id) === String(id));
-          return found ? { first: found.first_name, last: found.last_name } : null;
-        })
+        .map((id) => allPlayers.find((p) => String(p.id) === String(id)))
         .filter(Boolean);
 
-      let displayNames = selectedPlayers.map((p) => p.first);
+      let displayNames = selectedPlayers.map((p) => p.first_name);
 
       let letterCount = 1;
       let duplicatesExist = true;
@@ -72,8 +68,8 @@ function NewPartyForm({ onNext }) {
           if (seen.has(name)) {
             duplicatesExist = true;
             const prevIdx = seen.get(name);
-            displayNames[prevIdx] = `${selectedPlayers[prevIdx].first} ${selectedPlayers[prevIdx].last.slice(0, letterCount)}.`;
-            return `${p.first} ${p.last.slice(0, letterCount)}.`;
+            displayNames[prevIdx] = `${selectedPlayers[prevIdx].first_name} ${selectedPlayers[prevIdx].last_name.slice(0, letterCount)}.`;
+            return `${p.first_name} ${p.last_name.slice(0, letterCount)}.`;
           } else {
             seen.set(name, idx);
             return name;
@@ -83,11 +79,16 @@ function NewPartyForm({ onNext }) {
         if (duplicatesExist) letterCount++;
       }
 
-      // ⬅️ pass the session id forward
+      // Send both id and displayName to PartyForm
+      const playerData = selectedPlayers.map((p, idx) => ({
+        id: p.id,
+        displayName: displayNames[idx],
+      }));
+
       onNext({ 
         partyName: session.name, 
         sessionId: session.id, 
-        players: displayNames 
+        players: playerData
       });
     } catch (err) {
       alert("Erreur lors de la création de la partie: " + err.message);
@@ -100,7 +101,6 @@ function NewPartyForm({ onNext }) {
     <div>
       <h2>Démarrer une nouvelle partie</h2>
 
-      {/* Party name input */}
       <label>
         Nom de la partie :
         <input
@@ -109,22 +109,18 @@ function NewPartyForm({ onNext }) {
         />
       </label>
 
-      {/* Players selection */}
       <fieldset className="players-fieldset">
         <legend>Joueurs</legend>
         <div className="players-grid">
           {players.map((selectedId, i) => {
             const selectedOtherIds = players.filter((_, idx) => idx !== i);
-
             return (
               <select
                 key={i}
                 value={selectedId}
                 onChange={(e) => handleChange(i, e.target.value)}
               >
-                <option value="">
-                  Joueur {i + 1}
-                </option>
+                <option value="">Joueur {i + 1}</option>
                 {allPlayers
                   .filter((player) => !selectedOtherIds.includes(String(player.id)))
                   .map((player) => (

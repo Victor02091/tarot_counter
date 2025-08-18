@@ -3,46 +3,43 @@ import { submitPartyResult } from "../services/api";
 import "./PartyForm.css";
 
 function PartyForm({ players }) {
-  const [taker, setTaker] = useState("");
-  const [called, setCalled] = useState("");
+  // Keep track of selected player IDs as integers or null
+  const [takerId, setTakerId] = useState(null);
+  const [calledId, setCalledId] = useState(null);
   const [contract, setContract] = useState("");
   const [oudlers, setOudlers] = useState(0);
   const [points, setPoints] = useState(50);
-  const [petitPlayer, setPetitPlayer] = useState("");
+  const [petitPlayerId, setPetitPlayerId] = useState(null);
   const [petitResult, setPetitResult] = useState("");
-  const [poignees, setPoignees] = useState({
-    simple: [],
-    double: [],
-    triple: [],
-  });
+  const [poignees, setPoignees] = useState({ simple: [], double: [], triple: [] });
   const [miseres, setMiseres] = useState({ atout: [], tete: [] });
   const [chlem, setChlem] = useState("");
 
-  const toggleMisere = (type, player) => {
+  const toggleMisere = (type, playerId) => {
     setMiseres((prev) => {
-      const updated = prev[type].includes(player)
-        ? prev[type].filter((p) => p !== player)
-        : [...prev[type], player];
+      const updated = prev[type].includes(playerId)
+        ? prev[type].filter((p) => p !== playerId)
+        : [...prev[type], playerId];
       return { ...prev, [type]: updated };
     });
   };
 
-  const togglePoignee = (type, player) => {
+  const togglePoignee = (type, playerId) => {
     setPoignees((prev) => {
-      const updated = prev[type].includes(player)
-        ? prev[type].filter((p) => p !== player)
-        : [...prev[type], player];
+      const updated = prev[type].includes(playerId)
+        ? prev[type].filter((p) => p !== playerId)
+        : [...prev[type], playerId];
       return { ...prev, [type]: updated };
     });
   };
 
-  const togglePetit = (player) => {
-    if (petitPlayer !== player) {
-      setPetitPlayer(player);
+  const togglePetit = (playerId) => {
+    if (petitPlayerId !== playerId) {
+      setPetitPlayerId(playerId);
       setPetitResult("gagne");
     } else {
       setPetitResult(petitResult === "gagne" ? "perdu" : "");
-      if (petitResult === "") setPetitPlayer("");
+      if (petitResult === "") setPetitPlayerId(null);
     }
   };
 
@@ -51,16 +48,11 @@ function PartyForm({ players }) {
 
   const getTargetScore = () => {
     switch (oudlers) {
-      case 0:
-        return 56;
-      case 1:
-        return 51;
-      case 2:
-        return 41;
-      case 3:
-        return 36;
-      default:
-        return 0;
+      case 0: return 56;
+      case 1: return 51;
+      case 2: return 41;
+      case 3: return 36;
+      default: return 0;
     }
   };
 
@@ -69,10 +61,9 @@ function PartyForm({ players }) {
   const contractWon = diff >= 0;
 
   const handleSubmit = async () => {
-    // --- Validation check ---
     let missing = [];
-    if (!taker) missing.push("le preneur");
-    if (!called) missing.push("le joueur appelé");
+    if (takerId === null) missing.push("le preneur");
+    if (calledId === null) missing.push("le joueur appelé");
     if (!contract) missing.push("le contrat");
 
     if (missing.length > 0) {
@@ -83,16 +74,19 @@ function PartyForm({ players }) {
     }
 
     const result = {
-      taker,
-      called,
+      taker_id: Number(takerId),
+      called_player_id: Number(calledId),
       contract,
       oudlers,
       points,
-      petit: { player: petitPlayer, result: petitResult },
+      petit: petitPlayerId
+        ? { player_id: Number(petitPlayerId), result: petitResult }
+        : null,
       poignees,
       miseres,
-      chlem,
+      chlem: chlem || null,
     };
+    
 
     try {
       await submitPartyResult(result);
@@ -104,18 +98,16 @@ function PartyForm({ players }) {
     }
 
     // Reset all states
-    setTaker("");
-    setCalled("");
+    setTakerId(null);
+    setCalledId(null);
     setContract("");
     setOudlers(0);
     setPoints(50);
-    setPetitPlayer("");
+    setPetitPlayerId(null);
     setPetitResult("");
     setPoignees({ simple: [], double: [], triple: [] });
     setMiseres({ atout: [], tete: [] });
     setChlem("");
-
-    // Scroll to top
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -126,13 +118,13 @@ function PartyForm({ players }) {
       <div className="section">
         <label>Preneur :</label>
         <div className="button-group no-wrap-buttons">
-          {players.map((p, i) => (
+          {players.map((p) => (
             <button
-              key={i}
-              className={taker === p ? "selected" : ""}
-              onClick={() => setTaker(p)}
+              key={p.id}
+              className={takerId === p.id ? "selected" : ""}
+              onClick={() => setTakerId(p.id)}
             >
-              {p}
+              {p.displayName}
             </button>
           ))}
         </div>
@@ -141,13 +133,13 @@ function PartyForm({ players }) {
       <div className="section">
         <label>Joueur appelé :</label>
         <div className="button-group no-wrap-buttons">
-          {players.map((p, i) => (
+          {players.map((p) => (
             <button
-              key={i}
-              className={called === p ? "selected" : ""}
-              onClick={() => setCalled(p)}
+              key={p.id}
+              className={calledId === p.id ? "selected" : ""}
+              onClick={() => setCalledId(p.id)}
             >
-              {p}
+              {p.displayName}
             </button>
           ))}
         </div>
@@ -156,9 +148,9 @@ function PartyForm({ players }) {
       <div className="section">
         <label>Contrat :</label>
         <div className="button-group no-wrap-buttons">
-          {["Petite", "Garde", "Garde sans", "Garde contre"].map((c, i) => (
+          {["Petite", "Garde", "Garde sans", "Garde contre"].map((c) => (
             <button
-              key={i}
+              key={c}
               className={contract === c ? "selected" : ""}
               onClick={() => setContract(c)}
             >
@@ -210,9 +202,7 @@ function PartyForm({ players }) {
         </div>
 
         <div className="score-control-inline">
-          <button className="round-button" onClick={removePoint}>
-            -
-          </button>
+          <button className="round-button" onClick={removePoint}>-</button>
           <input
             type="range"
             min="0"
@@ -220,20 +210,18 @@ function PartyForm({ players }) {
             value={points}
             onChange={(e) => setPoints(Number(e.target.value))}
           />
-          <button className="round-button" onClick={addPoint}>
-            +
-          </button>
+          <button className="round-button" onClick={addPoint}>+</button>
         </div>
       </div>
 
       <fieldset>
         <legend>Petit au bout</legend>
         <div className="button-group no-wrap-buttons">
-          {players.map((p, i) => (
+          {players.map((p) => (
             <button
-              key={`petit-${i}`}
+              key={`petit-${p.id}`}
               className={
-                petitPlayer === p
+                petitPlayerId === p.id
                   ? petitResult === "gagne"
                     ? "success"
                     : petitResult === "perdu"
@@ -241,14 +229,14 @@ function PartyForm({ players }) {
                     : "selected"
                   : ""
               }
-              onClick={() => togglePetit(p)}
+              onClick={() => togglePetit(p.id)}
             >
-              {p}
+              {p.displayName}
               <br />
-              {petitPlayer === p && petitResult === "gagne" && (
+              {petitPlayerId === p.id && petitResult === "gagne" && (
                 <span style={{ color: "green" }}>Gagné</span>
               )}
-              {petitPlayer === p && petitResult === "perdu" && (
+              {petitPlayerId === p.id && petitResult === "perdu" && (
                 <span style={{ color: "red" }}>Perdu</span>
               )}
             </button>
@@ -258,23 +246,19 @@ function PartyForm({ players }) {
 
       <fieldset>
         <legend>Poignées</legend>
-        {["simple", "double", "triple"].map((type, idx) => (
+        {["simple", "double", "triple"].map((type) => (
           <div key={type}>
             <label>
-              {type === "simple"
-                ? "Simple (8 atouts)"
-                : type === "double"
-                ? "Double (10 atouts)"
-                : "Triple (13 atouts)"}
+              {type === "simple" ? "Simple (8 atouts)" : type === "double" ? "Double (10 atouts)" : "Triple (13 atouts)"}
             </label>
             <div className="button-group no-wrap-buttons">
-              {players.map((p, i) => (
+              {players.map((p) => (
                 <button
-                  key={`${type}-${i}`}
-                  className={poignees[type].includes(p) ? "selected" : ""}
-                  onClick={() => togglePoignee(type, p)}
+                  key={`${type}-${p.id}`}
+                  className={poignees[type].includes(p.id) ? "selected" : ""}
+                  onClick={() => togglePoignee(type, p.id)}
                 >
-                  {p}
+                  {p.displayName}
                 </button>
               ))}
             </div>
@@ -286,25 +270,25 @@ function PartyForm({ players }) {
         <legend>Misères</legend>
         <label>Misère d’atout :</label>
         <div className="button-group no-wrap-buttons">
-          {players.map((p, i) => (
+          {players.map((p) => (
             <button
-              key={`atout-${i}`}
-              className={miseres.atout.includes(p) ? "selected" : ""}
-              onClick={() => toggleMisere("atout", p)}
+              key={`atout-${p.id}`}
+              className={miseres.atout.includes(p.id) ? "selected" : ""}
+              onClick={() => toggleMisere("atout", p.id)}
             >
-              {p}
+              {p.displayName}
             </button>
           ))}
         </div>
         <label>Misère de tête :</label>
         <div className="button-group no-wrap-buttons">
-          {players.map((p, i) => (
+          {players.map((p) => (
             <button
-              key={`tete-${i}`}
-              className={miseres.tete.includes(p) ? "selected" : ""}
-              onClick={() => toggleMisere("tete", p)}
+              key={`tete-${p.id}`}
+              className={miseres.tete.includes(p.id) ? "selected" : ""}
+              onClick={() => toggleMisere("tete", p.id)}
             >
-              {p}
+              {p.displayName}
             </button>
           ))}
         </div>
@@ -313,17 +297,15 @@ function PartyForm({ players }) {
       <fieldset>
         <legend>Chelem</legend>
         <div className="button-group no-wrap-buttons">
-          {["Annoncé et passé", "Non annoncé et passé", "Annoncé et chuté"].map(
-            (option, i) => (
-              <button
-                key={i}
-                className={chlem === option ? "selected" : ""}
-                onClick={() => setChlem(option)}
-              >
-                {option}
-              </button>
-            )
-          )}
+          {["Annoncé et passé", "Non annoncé et passé", "Annoncé et chuté"].map((option) => (
+            <button
+              key={option}
+              className={chlem === option ? "selected" : ""}
+              onClick={() => setChlem(option)}
+            >
+              {option}
+            </button>
+          ))}
         </div>
       </fieldset>
 

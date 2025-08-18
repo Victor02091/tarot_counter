@@ -24,7 +24,10 @@ function App() {
           />
         )}
         {step === "questionnaire" && (
-          <PartyForm players={partyData.players} />
+          <PartyForm
+            players={partyData.players}       // Array of {id, displayName}
+            sessionId={partyData.sessionId}   // Session ID for backend
+          />
         )}
       </div>
     </div>

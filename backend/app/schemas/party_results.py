@@ -3,21 +3,19 @@ from typing import List, Literal, Optional, Dict
 
 
 class Petit(BaseModel):
-    player: str
+    player_id: int 
     result: Literal["gagne", "perdu", ""]
 
 
 class PartyResultBase(BaseModel):
-    taker: str
-    called: str
+    taker_id: int  
+    called_player_id: int  
     contract: str
     oudlers: int
     points: int
-    petit: Petit
-    poignees: Dict[
-        str, List[str]
-    ]  # e.g., { "simple": ["Alice"], "double": [], "triple": [] }
-    miseres: Dict[str, List[str]]  # e.g., { "atout": ["Bob"], "tete": [] }
+    petit: Optional[Petit] = None
+    poignees: Dict[str, List[int]]  # e.g., { "simple": [1], "double": [], "triple": [] }
+    miseres: Dict[str, List[int]]   # e.g., { "atout": [2], "tete": [] }
     chlem: Optional[str] = None
 
 
