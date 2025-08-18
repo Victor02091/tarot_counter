@@ -1,8 +1,20 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, Enum
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import ARRAY
 from app.db.base import Base
+import enum
 
+# French Tarot contract
+class ContractType(enum.Enum):
+    petite = "Petite"
+    garde = "Garde"
+    garde_sans = "Garde sans"
+    garde_contre = "Garde contre"
+
+class ChlemType(enum.Enum):
+    announced_and_won = "Annoncé et passé"
+    non_announced_and_won = "Non annoncé et passé"
+    announced_and_failed = "Annoncé et chuté"
 
 class PartyResult(Base):
     __tablename__ = "party_results"
@@ -10,7 +22,8 @@ class PartyResult(Base):
     id = Column(Integer, primary_key=True, index=True)
     taker_id = Column(Integer, ForeignKey("players.id"), nullable=False)
     called_player_id = Column(Integer, ForeignKey("players.id"), nullable=False)
-    contract = Column(String, nullable=False)
+    contract = Column(Enum(ContractType, name="contract_type", create_type=True
+                           ,values_callable=lambda x: [e.value for e in x]), nullable=False)
     oudlers = Column(Integer, nullable=False)
     points = Column(Integer, nullable=False)
     petit_au_bout_player_id = Column(Integer, ForeignKey("players.id"), nullable=True)
@@ -20,7 +33,8 @@ class PartyResult(Base):
     poignee_triple_players_ids = Column(ARRAY(Integer), nullable=False)
     misere_tete_players_ids = Column(ARRAY(Integer), nullable=False)
     misere_atout_players_ids = Column(ARRAY(Integer), nullable=False)
-    chlem = Column(String, nullable=True)
+    chlem = Column(Enum(ChlemType, name="chlem_type", create_type=True
+                        , values_callable=lambda x: [e.value for e in x]), nullable=False)
 
     # Relationships
     taker = relationship("Player", foreign_keys=[taker_id])

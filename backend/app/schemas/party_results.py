@@ -1,10 +1,23 @@
 from pydantic import BaseModel
-from typing import List, Optional, Dict
+from typing import List, Optional
+from enum import Enum
+
+class ContractType(str, Enum):  
+    petite = "Petite"
+    garde = "Garde"
+    garde_sans = "Garde sans"
+    garde_contre = "Garde contre"
+
+
+class ChlemType(str, Enum):
+    announced_and_won = "Annoncé et passé"
+    non_announced_and_won = "Non annoncé et passé"
+    announced_and_failed = "Annoncé et chuté"
 
 class PartyResultBase(BaseModel):
     taker_id: int  
     called_player_id: int  
-    contract: str
+    contract: ContractType
     oudlers: int
     points: int
     petit_au_bout_player_id: Optional[int] = None
@@ -14,7 +27,7 @@ class PartyResultBase(BaseModel):
     poignee_triple_players_ids: List[int]
     misere_tete_players_ids: List[int]
     misere_atout_players_ids: List[int]
-    chlem: Optional[str] = None
+    chlem: Optional[ChlemType] = None
 
 
 class PartyResultCreate(PartyResultBase):
