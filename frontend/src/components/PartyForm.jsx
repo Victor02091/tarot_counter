@@ -65,29 +65,32 @@ function PartyForm({ players }) {
     if (takerId === null) missing.push("le preneur");
     if (calledId === null) missing.push("le joueur appelé");
     if (!contract) missing.push("le contrat");
-
+  
     if (missing.length > 0) {
       alert(
         `Veuillez renseigner ${missing.join(", ").replace(/,([^,]*)$/, " et$1")} pour valider la partie.`
       );
       return;
     }
-
+  
+    // Map petitResult string to boolean or null
+    let petitWon = null;
+    if (petitResult === "gagne") petitWon = true;
+    else if (petitResult === "perdu") petitWon = false;
+  
     const result = {
       taker_id: Number(takerId),
       called_player_id: Number(calledId),
       contract,
       oudlers,
       points,
-      petit: petitPlayerId
-        ? { player_id: Number(petitPlayerId), result: petitResult }
-        : null,
+      petit_au_bout_player_id: petitPlayerId || null,
+      petit_au_bout_won: petitWon,
       poignees,
       miseres,
       chlem: chlem || null,
     };
-    
-
+  
     try {
       await submitPartyResult(result);
       alert("Résultat soumis avec succès !");
@@ -96,7 +99,7 @@ function PartyForm({ players }) {
       alert("Erreur lors de l'envoi du résultat");
       return;
     }
-
+  
     // Reset all states
     setTakerId(null);
     setCalledId(null);
@@ -110,6 +113,7 @@ function PartyForm({ players }) {
     setChlem("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+  
 
   return (
     <div>

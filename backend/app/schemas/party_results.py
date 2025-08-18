@@ -13,7 +13,8 @@ class PartyResultBase(BaseModel):
     contract: str
     oudlers: int
     points: int
-    petit: Optional[Petit] = None
+    petit_au_bout_player_id: Optional[int] = None
+    petit_au_bout_won: Optional[bool] = None
     poignees: Dict[str, List[int]]  # e.g., { "simple": [1], "double": [], "triple": [] }
     miseres: Dict[str, List[int]]   # e.g., { "atout": [2], "tete": [] }
     chlem: Optional[str] = None
