@@ -169,7 +169,7 @@ function TarotQuestionnaire({ players }) {
       </div>
 
       <div className="section">
-        <label>Nombre d'oudlers :</label>
+        <label>Nombre de bouts :</label>
         <div className="button-group no-wrap-buttons">
           {[0, 1, 2, 3].map((n) => (
             <button
