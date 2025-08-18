@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { submitPartyResult } from "../services/api";
-import "./TarotQuestionnaire.css";
+import "./PartyForm.css";
 
-function TarotQuestionnaire({ players }) {
+function PartyForm({ players }) {
   const [taker, setTaker] = useState("");
   const [called, setCalled] = useState("");
   const [contract, setContract] = useState("");
@@ -332,4 +332,4 @@ function TarotQuestionnaire({ players }) {
   );
 }
 
-export default TarotQuestionnaire;
+export default PartyForm;

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import HomePage from "./components/HomePage";
 import NewPartyForm from "./components/NewPartyForm";
-import TarotQuestionnaire from "./components/TarotQuestionnaire";
+import PartyForm from "./components/PartyForm";
 import "./App.css";
 
 function App() {
@@ -24,7 +24,7 @@ function App() {
           />
         )}
         {step === "questionnaire" && (
-          <TarotQuestionnaire players={partyData.players} />
+          <PartyForm players={partyData.players} />
         )}
       </div>
     </div>
