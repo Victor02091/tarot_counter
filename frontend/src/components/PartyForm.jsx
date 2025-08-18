@@ -86,8 +86,12 @@ function PartyForm({ players }) {
       points,
       petit_au_bout_player_id: petitPlayerId || null,
       petit_au_bout_won: petitWon,
-      poignees,
       miseres,
+      poignee_simple_players_ids: poignees.simple,
+      poignee_double_players_ids: poignees.double,
+      poignee_triple_players_ids: poignees.triple,
+      misere_tete_players_ids: miseres.tete,
+      misere_atout_players_ids: miseres.atout,
       chlem: chlem || null,
     };
   
