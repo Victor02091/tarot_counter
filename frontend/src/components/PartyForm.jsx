@@ -2,8 +2,7 @@ import { useState } from "react";
 import { submitPartyResult } from "../services/api";
 import "./PartyForm.css";
 
-function PartyForm({ players }) {
-  // Keep track of selected player IDs as integers or null
+function PartyForm({ players, sessionId }) {
   const [takerId, setTakerId] = useState(null);
   const [calledId, setCalledId] = useState(null);
   const [contract, setContract] = useState("");
@@ -79,6 +78,7 @@ function PartyForm({ players }) {
     else if (petitResult === "perdu") petitWon = false;
   
     const result = {
+      game_session_id: Number(sessionId),
       taker_id: Number(takerId),
       called_player_id: Number(calledId),
       contract,

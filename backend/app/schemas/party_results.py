@@ -16,7 +16,8 @@ class ChlemType(str, Enum):
     announced_and_failed = "Annoncé et chuté"
 
 class PartyResultBase(BaseModel):
-    taker_id: int  
+    taker_id: int
+    game_session_id : int
     called_player_id: int  
     contract: ContractType
     oudlers: int

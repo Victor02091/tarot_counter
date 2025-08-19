@@ -20,6 +20,7 @@ class PartyResult(Base):
     __tablename__ = "party_results"
 
     id = Column(Integer, primary_key=True, index=True)
+    game_session_id = Column(Integer, ForeignKey("game_sessions.id"), nullable=False)
     taker_id = Column(Integer, ForeignKey("players.id"), nullable=False)
     called_player_id = Column(Integer, ForeignKey("players.id"), nullable=False)
     contract = Column(Enum(ContractType, name="contract_type", create_type=True
@@ -39,6 +40,7 @@ class PartyResult(Base):
 
 
     # Relationships
+    game_session = relationship("GameSession", backref="party_results")
     taker = relationship("Player", foreign_keys=[taker_id])
     called = relationship("Player", foreign_keys=[called_player_id])
     petit_au_bout_player = relationship("Player", foreign_keys=[petit_au_bout_player_id])
