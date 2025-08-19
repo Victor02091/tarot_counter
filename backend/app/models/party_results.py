@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, Enum
+from sqlalchemy import Column, Integer, ForeignKey, Boolean, Enum, DateTime, func
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import ARRAY
 from app.db.base import Base
@@ -34,7 +34,9 @@ class PartyResult(Base):
     misere_tete_players_ids = Column(ARRAY(Integer), nullable=False)
     misere_atout_players_ids = Column(ARRAY(Integer), nullable=False)
     chlem = Column(Enum(ChlemType, name="chlem_type", create_type=True
-                        , values_callable=lambda x: [e.value for e in x]), nullable=False)
+                        , values_callable=lambda x: [e.value for e in x]), nullable=True)
+    create_timestamp = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
+
 
     # Relationships
     taker = relationship("Player", foreign_keys=[taker_id])

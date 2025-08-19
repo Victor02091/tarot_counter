@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import List, Optional
+from datetime import datetime
 from enum import Enum
 
 class ContractType(str, Enum):  
@@ -36,6 +37,7 @@ class PartyResultCreate(PartyResultBase):
 
 class PartyResultRead(PartyResultBase):
     id: int
+    create_timestamp: datetime
 
     class Config:
         from_attributes = True
