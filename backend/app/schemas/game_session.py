@@ -4,6 +4,11 @@ from typing import Optional
 
 class GameSessionBase(BaseModel):
     name: Optional[str] = None
+    player_1_id: int
+    player_2_id: int
+    player_3_id: int
+    player_4_id: int
+    player_5_id: Optional[int] = None
 
     # Normalize fields
     @field_validator("name")

@@ -6,7 +6,7 @@ from app.schemas.party_results import PartyResultCreate
 def create_party_result(
     db: Session, party_result: PartyResultCreate
 ) -> PartyResult:
-    db_result = PartyResult(**party_result.dict())
+    db_result = PartyResult(**party_result.model_dump())
     db.add(db_result)
     db.commit()
     db.refresh(db_result)

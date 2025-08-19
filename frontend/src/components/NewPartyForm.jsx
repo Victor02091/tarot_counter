@@ -48,7 +48,14 @@ function NewPartyForm({ onNext }) {
     if (players.some((id) => id === "")) return;
 
     try {
-      const session = await createGameSession({ name: partyName || null });
+      const session = await createGameSession({
+        name: partyName || null,
+        player_1_id: parseInt(players[0]),
+        player_2_id: parseInt(players[1]),
+        player_3_id: parseInt(players[2]),
+        player_4_id: parseInt(players[3]),
+        player_5_id: parseInt(players[4]),
+      });
 
       const selectedPlayers = players
         .map((id) => allPlayers.find((p) => String(p.id) === String(id)))

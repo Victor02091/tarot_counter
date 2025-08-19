@@ -3,7 +3,7 @@ from app.models.player import Player
 from app.schemas.player import PlayerCreate
 
 def create_player(db: Session, player: PlayerCreate) -> Player:
-    db_player = Player(first_name=player.first_name, last_name=player.last_name)
+    db_player = Player(**player.model_dump())
     db.add(db_player)
     db.commit()
     db.refresh(db_player)
