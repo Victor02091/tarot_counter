@@ -1,36 +1,26 @@
-import { useState } from "react";
-import HomePage from "./components/HomePage";
-import NewPartyForm from "./components/NewPartyForm";
-import PartyForm from "./components/PartyForm";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import HomePageWrapper from "./pages/HomePageWrapper";
+import NewPartyFormWrapper from "./pages/NewPartyFormWrapper";
+import PartyFormWrapper from "./pages/PartyFormWrapper";
 import "./App.css";
 
 function App() {
-  const [step, setStep] = useState("home");
-  const [partyData, setPartyData] = useState(null);
-
   return (
-    <div className="app-wrapper" style={{ color: "#111" }}>
-      <div className="container">
-        <h1 className="app-title" style={{ color: "#222" }}>
-          🎴 Compteur de tarot
-        </h1>
-        {step === "home" && <HomePage onStart={() => setStep("form")} />}
-        {step === "form" && (
-          <NewPartyForm
-            onNext={(data) => {
-              setPartyData(data);
-              setStep("questionnaire");
-            }}
-          />
-        )}
-        {step === "questionnaire" && (
-          <PartyForm
-            players={partyData.players}       // Array of {id, displayName}
-            sessionId={partyData.sessionId}   // Session ID for backend
-          />
-        )}
+    <Router>
+      <div className="app-wrapper" style={{ color: "#111" }}>
+        <div className="container">
+          <h1 className="app-title" style={{ color: "#222" }}>
+            🎴 Compteur de tarot
+          </h1>
+
+          <Routes>
+            <Route path="/" element={<HomePageWrapper />} />
+            <Route path="/new-party" element={<NewPartyFormWrapper />} />
+            <Route path="/party/:sessionId" element={<PartyFormWrapper />} />
+          </Routes>
+        </div>
       </div>
-    </div>
+    </Router>
   );
 }
 
