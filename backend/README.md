@@ -27,7 +27,7 @@ More info on [official website](https://docs.astral.sh/uv/getting-started/instal
 Make sure you're in the `backend` directory , then run:
 
 ```bash
-uv sync --extra=dev
+uv sync
 ```
 
 ### 2. Database migration
