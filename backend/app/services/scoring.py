@@ -36,28 +36,31 @@ def compute_party_result_scores(party: PartyResult) -> Dict[int, int]:
     # 1. Determine base score
     threshold = OUDLER_THRESHOLDS.get(party.oudlers, 56)
     diff = party.points - threshold
-    base_score = diff + 25
+    sign_won = 1 if diff >=0 else -1 # 1 if won
+    base_score = diff +  25 * sign_won
+
+    print("BASE BASE", base_score)
 
     # 2. Petit au bout
-    if party.petit_au_bout_player:
-        if party.petit_au_bout_won:
-            base_score += 10
-        else:
-            base_score -= 10
+    if party.petit_au_bout_player_id:
+        sign_petit_won = 1 if party.petit_au_bout_won else -1
+        sign_player_team = 1 if party.petit_au_bout_player_id in (party.taker_id,party.called_player_id) else -1
+        base_score += 10 * sign_petit_won * sign_player_team
+
 
     # 3. Apply contract multiplier
     coef = CONTRACT_MULTIPLIERS[party.contract]
     score = base_score * coef
 
     # 4. Poignées
-    score += len(party.poignee_simple_players_ids) * POIGNEE_POINTS["simple"]
-    score += len(party.poignee_double_players_ids) * POIGNEE_POINTS["double"]
-    score += len(party.poignee_triple_players_ids) * POIGNEE_POINTS["triple"]
+    #score += len(party.poignee_simple_players_ids) * POIGNEE_POINTS["simple"]
+    #score += len(party.poignee_double_players_ids) * POIGNEE_POINTS["double"]
+    #score += len(party.poignee_triple_players_ids) * POIGNEE_POINTS["triple"]
 
 
     # 5. Chlem
-    if party.chlem:
-        score += CHLEM_POINTS[party.chlem]
+    #if party.chlem:
+    #    score += CHLEM_POINTS[party.chlem]
 
     # 6. Distribute points
     session_players = [
@@ -71,18 +74,24 @@ def compute_party_result_scores(party: PartyResult) -> Dict[int, int]:
     ]
     results = {p.id: 0 for p in session_players}
 
-    # Main game
+    # Attack
     results[party.taker_id] += score * 2
-    results[party.called_player_id] += score
+    if party.taker_id==party.called_player_id:
+        results[party.taker_id] += score * 2
+    else:
+        results[party.called_player_id] += score
 
+    # Defense
     defenders = [pid for pid in results.keys() if pid not in (party.taker_id, party.called_player_id)]
     for d in defenders:
         results[d] -= score
 
     # Add misère bonuses individually
-    for pid in party.misere_tete_players_ids:
-        results[pid] += MISERE_POINTS["tete"]
-    for pid in party.misere_atout_players_ids:
-        results[pid] += MISERE_POINTS["atout"]
+    # for pid in party.misere_tete_players_ids:
+    #     results[pid] += MISERE_POINTS["tete"]
+    # for pid in party.misere_atout_players_ids:
+    #     results[pid] += MISERE_POINTS["atout"]
+
+    print("TOTAL", sum(results.values()))
 
     return results
