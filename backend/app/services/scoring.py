@@ -53,9 +53,9 @@ def compute_party_result_scores(party: PartyResult) -> Dict[int, int]:
     score = base_score * coef
 
     # 4. Poignées
-    #score += len(party.poignee_simple_players_ids) * POIGNEE_POINTS["simple"]
-    #score += len(party.poignee_double_players_ids) * POIGNEE_POINTS["double"]
-    #score += len(party.poignee_triple_players_ids) * POIGNEE_POINTS["triple"]
+    score += len(party.poignee_simple_players_ids) * POIGNEE_POINTS["simple"] * sign_won
+    score += len(party.poignee_double_players_ids) * POIGNEE_POINTS["double"] * sign_won
+    score += len(party.poignee_triple_players_ids) * POIGNEE_POINTS["triple"] * sign_won
 
 
     # 5. Chlem

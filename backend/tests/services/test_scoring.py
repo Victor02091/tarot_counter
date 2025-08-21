@@ -74,6 +74,26 @@ def test_taker_call_himself():
     scores = compute_party_result_scores(party)
     assert scores=={1: -172, 2: -172, 3: -172, 4: 688, 5: -172}
 
+def test_poignees():
+    # Simple and double poignees
+    party = FakePartyResult( points=49
+                        , oudlers=1
+                        , contract=ContractType.garde_sans
+                        , poignee_simple_players_ids = [1]
+                        , poignee_triple_players_ids = [4])
+    scores = compute_party_result_scores(party)
+    assert scores=={1: -336, 2: -168, 3: 168, 4: 168, 5: 168}
 
+    # Two double poignees
+    party = FakePartyResult( points=56
+                    , oudlers=0
+                    , contract=ContractType.petite
+                    , taker_id=1
+                    , called_player_id=1
+                    , petit_au_bout_player_id=4
+                    , petit_au_bout_won=False
+                    , poignee_double_players_ids = [4,5])
+    scores = compute_party_result_scores(party)
+    assert scores=={1: 380, 2: -95, 3: -95, 4: -95, 5: -95}
 
 
