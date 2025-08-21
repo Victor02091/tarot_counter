@@ -56,7 +56,6 @@ addopts = [
     "--cov-fail-under=0",
 ]
 pythonpath = ["."]
-norecursedirs = ["tests/old_tests"]
 
 [tool.coverage.run]
 omit = [
