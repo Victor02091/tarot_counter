@@ -44,3 +44,4 @@ class PartyResult(Base):
     taker = relationship("Player", foreign_keys=[taker_id])
     called = relationship("Player", foreign_keys=[called_player_id])
     petit_au_bout_player = relationship("Player", foreign_keys=[petit_au_bout_player_id])
+    scores = relationship("PartyScore",backref="party_result",cascade="all, delete-orphan")

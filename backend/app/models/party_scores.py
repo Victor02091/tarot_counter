@@ -11,5 +11,4 @@ class PartyScore(Base):
     score = Column(Integer, nullable=False)
 
     # Relationships
-    party_result = relationship("PartyResult", backref="scores")
     player = relationship("Player")
