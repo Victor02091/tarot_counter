@@ -57,12 +57,15 @@ export default function ResumeSessionsPage() {
             <article key={s.id} className="session-card">
               <div className="session-card__top">
                 <div className="session-card__title">
-                  <h2>{s.name?.trim() || `Session #${s.id}`}</h2>
-                  <span className="chip chip--date">{formatDate(s.create_timestamp)}</span>
+                  <h2>{s.name?.trim() || `Session ${s.id}`}</h2>
                 </div>
-                <span className="chip chip--count">
-                  🎲 {s.nb_parties} partie{s.nb_parties > 1 ? "s" : ""}
-                </span>
+
+                <div className="session-card__meta">
+                  <span className="chip chip--date">{formatDate(s.create_timestamp)}</span>
+                  <span className="chip chip--count">
+                    🎲 {s.nb_parties} partie{s.nb_parties > 1 ? "s" : ""}
+                  </span>
+                </div>
               </div>
 
               <div className="divider" />

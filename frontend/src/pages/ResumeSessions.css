@@ -20,17 +20,17 @@
   .resume-page {
     min-height: 100vh;
     background: linear-gradient(180deg, var(--bg-from), var(--bg-to));
-    padding: 48px 28px 64px;
+    padding: 32px 20px 48px;
     color: var(--text-900);
   }
   
   /* Header */
   .resume-header {
-    max-width: 1100px;
-    margin: 0 auto 28px;
+    max-width: 680px;
+    margin: 0 auto 24px;
   }
   .resume-header h1 {
-    font-size: 28px;
+    font-size: 24px;
     line-height: 1.2;
     margin: 0;
   }
@@ -41,7 +41,7 @@
   
   /* Alerts */
   .resume-alert {
-    max-width: 1100px;
+    max-width: 680px;
     margin: 16px auto 0;
     background: #fef2f2;
     border: 1px solid #fecaca;
@@ -52,16 +52,11 @@
   
   /* Grid */
   .card-grid {
-    max-width: 1100px;
+    max-width: 680px;
     margin: 24px auto 0;
     display: grid;
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-    gap: 20px;
-  }
-  @media (min-width: 700px) {
-    .card-grid { 
-      grid-template-columns: repeat(2, minmax(0, 1fr)); 
-    }
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
   
   /* Card */
@@ -71,35 +66,28 @@
     backdrop-filter: blur(6px);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-sm);
-    padding: 18px 18px 16px;
+    padding: 16px 16px 14px;
     transition: transform .2s ease, box-shadow .2s ease;
     display: flex;
     flex-direction: column;
-    min-width: 0; /* ✅ allow ellipsis inside */
+    min-width: 0;
   }
   .session-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-3px);
     box-shadow: var(--shadow-md);
   }
   
   /* Card header */
   .session-card__top {
     display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
+    flex-direction: column;
+    gap: 6px;
     min-width: 0;
   }
-  .session-card__title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    flex: 1;
-    min-width: 0; /* ✅ ellipsis works */
-  }
-  .session-card h2 {
-    font-size: 16px; /* 🔧 smaller for narrow screens */
+  
+  /* Title */
+  .session-card__title h2 {
+    font-size: 16px;
     font-weight: 700;
     margin: 0;
     color: var(--text-900);
@@ -108,16 +96,24 @@
     white-space: nowrap;
     max-width: 100%;
   }
+  
+  /* Date + Count horizontal row */
+  .session-card__meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
   .chip {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    height: 24px; /* 🔧 slightly smaller */
+    height: 22px;
     padding: 0 8px;
     border-radius: var(--radius-full);
-    font-size: 11px; /* 🔧 smaller */
+    font-size: 11px;
     white-space: nowrap;
-    max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
   }
@@ -136,12 +132,12 @@
   .divider {
     height: 1px;
     background: rgba(0,0,0,0.06);
-    margin: 14px 0 10px;
+    margin: 12px 0 8px;
   }
   
   /* Scores */
   .scores h3 {
-    margin: 0 0 10px;
+    margin: 0 0 8px;
     font-size: 13px;
     color: var(--text-700);
     letter-spacing: .2px;
@@ -151,7 +147,7 @@
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 8px;
+    gap: 6px;
   }
   .score-item {
     display: flex;
@@ -159,9 +155,9 @@
     justify-content: space-between;
     background: #f9fafb;
     border: 1px solid rgba(0,0,0,0.05);
-    border-radius: 14px;
-    padding: 8px 10px; /* 🔧 tighter padding */
-    min-width: 0; /* ✅ ellipsis works */
+    border-radius: 12px;
+    padding: 8px 10px;
+    min-width: 0;
     gap: 8px;
   }
   .score-item__left {
@@ -169,11 +165,11 @@
     align-items: center;
     gap: 8px;
     flex: 1;
-    min-width: 0; /* ✅ ellipsis works */
+    min-width: 0;
   }
   .avatar {
-    width: 32px; /* 🔧 slightly smaller */
-    height: 32px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     display: grid;
     place-items: center;
@@ -182,28 +178,22 @@
     color: #312e81;
     background: linear-gradient(135deg, #c7d2fe, #e0e7ff);
     border: 1px solid #c7d2fe;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
     flex-shrink: 0;
   }
   .player-name {
     color: var(--text-900);
     font-weight: 600;
-    font-size: 14px;
+    font-size: 13px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: 160px; /* ✅ keeps name from breaking layout */
-  }
-  @media (max-width: 400px) {
-    .player-name {
-      max-width: 120px; /* tighter on very small screens */
-    }
+    max-width: 100%;
   }
   .score {
     font-weight: 800;
     font-feature-settings: "tnum" 1, "lnum" 1;
-    font-size: 14px;
-    flex-shrink: 0; /* ✅ always visible */
+    font-size: 13px;
+    flex-shrink: 0;
     white-space: nowrap;
   }
   .score--pos { color: var(--green); }
@@ -212,64 +202,8 @@
   /* Empty state */
   .empty-state {
     max-width: 680px;
-    margin: 80px auto 0;
+    margin: 60px auto 0;
     text-align: center;
     color: var(--text-700);
-  }
-  .empty-state h2 {
-    margin: 14px 0 6px;
-    font-size: 22px;
-  }
-  .empty-state p {
-    margin: 0;
-    color: var(--text-500);
-  }
-  .empty-illustration {
-    width: 140px;
-    height: 140px;
-    margin: 0 auto 10px;
-    border-radius: 24px;
-    background:
-      radial-gradient(40px 40px at 35% 35%, #e0e7ff 20%, transparent 21%),
-      radial-gradient(26px 26px at 65% 60%, #fbcfe8 20%, transparent 21%),
-      linear-gradient(180deg, #ffffff, #eef2ff);
-    border: 1px solid rgba(0,0,0,0.05);
-    box-shadow: var(--shadow-md);
-  }
-  
-  /* Skeletons */
-  .skeleton {
-    position: relative;
-    overflow: hidden;
-  }
-  .skeleton::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
-    transform: translateX(-100%);
-    animation: shimmer 1.2s infinite;
-  }
-  .skeleton-line {
-    height: 12px;
-    background: #eef2f7;
-    border-radius: 6px;
-    margin: 8px 0;
-  }
-  .skeleton-line.w-60 { width: 60%; }
-  .skeleton-line.w-56 { width: 56%; }
-  .skeleton-line.w-52 { width: 52%; }
-  .skeleton-line.w-44 { width: 44%; }
-  .skeleton-line.w-40 { width: 40%; }
-  .skeleton-chip {
-    width: 120px;
-    height: 24px;
-    background: #eef2f7;
-    border-radius: 999px;
-    margin: 10px 0;
-  }
-  .skeleton-list { margin-top: 10px; }
-  @keyframes shimmer {
-    100% { transform: translateX(100%); }
   }
   
