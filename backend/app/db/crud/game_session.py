@@ -32,13 +32,16 @@ def get_sessions_with_scores(db: Session, skip: int = 0, limit: int = 20) -> lis
             .scalar()
         )
 
-        # Aggregate scores
+        # Aggregate scores with concatenated firstname + lastname
         scores_raw = (
-            db.query(Player.first_name, func.sum(PartyScore.score))
+            db.query(
+                func.concat(Player.first_name, ' ', Player.last_name).label('player_name'),
+                func.sum(PartyScore.score)
+            )
             .join(PartyScore, PartyScore.player_id == Player.id)
             .join(PartyResult, PartyResult.id == PartyScore.party_result_id)
             .filter(PartyResult.game_session_id == session.id)
-            .group_by(Player.id, Player.first_name)
+            .group_by(Player.id, Player.first_name, Player.last_name)
             .all()
         )
 
