@@ -13,7 +13,10 @@ function HomePage({ onStart }) {
   return (
     <div>
       <button onClick={onStart}>Nouvelle partie</button>
+      <button onClick={() => window.location.href="/resume"}>Reprendre une partie existante</button>
       <button onClick={() => setShowAddPlayer(true)}>Créer un nouveau profil de joueur</button>
+      
+
 
       {showAddPlayer && (
         <AddPlayerForm

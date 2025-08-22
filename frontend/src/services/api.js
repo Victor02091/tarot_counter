@@ -70,3 +70,14 @@ export async function createGameSession(session) {
 
   return await res.json();
 }
+
+export async function getGameSessions(skip = 0, limit = 20) {
+  const res = await fetch(`${API_URL}/game-sessions?skip=${skip}&limit=${limit}`);
+
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.detail || "Erreur serveur");
+  }
+
+  return await res.json();
+}

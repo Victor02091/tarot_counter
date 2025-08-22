@@ -1,6 +1,7 @@
 from pydantic import BaseModel, field_validator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
+from app.schemas.player_score import PlayerScoreSummary
 
 class GameSessionBase(BaseModel):
     name: Optional[str] = None
@@ -25,3 +26,12 @@ class GameSessionRead(GameSessionBase):
 
     class Config:
         from_attributes = True
+
+# Extended with scores
+class GameSessionSummary(BaseModel):
+    id: int
+    name: str | None
+    create_timestamp: datetime
+    nb_parties: int
+    scores: List[PlayerScoreSummary]
+

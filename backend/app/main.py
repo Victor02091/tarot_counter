@@ -1,7 +1,6 @@
 from fastapi import FastAPI
-from app.api import party_results
-from app.api import players
-from app.api import game_session
+from app.api import party_results, players, game_sessions
+
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -18,4 +17,4 @@ app.add_middleware(
 prefix="/api"
 app.include_router(party_results.router, prefix=prefix)
 app.include_router(players.router, prefix=prefix)
-app.include_router(game_session.router, prefix=prefix)
+app.include_router(game_sessions.router, prefix=prefix)
