@@ -59,8 +59,8 @@ def compute_party_result_scores(party: PartyResult) -> Dict[int, int]:
 
 
     # 5. Chlem
-    #if party.chlem:
-    #    score += CHLEM_POINTS[party.chlem]
+    if party.chlem:
+       score += CHLEM_POINTS[party.chlem]
 
     # 6. Distribute points
     session_players = [
@@ -87,11 +87,18 @@ def compute_party_result_scores(party: PartyResult) -> Dict[int, int]:
         results[d] -= score
 
     # Add misère bonuses individually
-    # for pid in party.misere_tete_players_ids:
-    #     results[pid] += MISERE_POINTS["tete"]
-    # for pid in party.misere_atout_players_ids:
-    #     results[pid] += MISERE_POINTS["atout"]
+    # Misere Tête
+    for pid_misere in party.misere_tete_players_ids:
+        results[pid_misere] += MISERE_POINTS["tete"]*(len(results.keys())-1)
+        for pid_other in results.keys():
+            if pid_other!=pid_misere:
+                results[pid_other]-= MISERE_POINTS["tete"]
 
-    print("TOTAL", sum(results.values()))
+    # Misere Atout
+    for pid_atout in party.misere_atout_players_ids:
+        results[pid_atout] += MISERE_POINTS["atout"]*(len(results.keys())-1)
+        for pid_other in results.keys():
+            if pid_other!=pid_atout:
+                results[pid_other]-= MISERE_POINTS["atout"]
 
     return results

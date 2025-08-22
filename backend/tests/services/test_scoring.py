@@ -97,3 +97,64 @@ def test_poignees():
     assert scores=={1: 380, 2: -95, 3: -95, 4: -95, 5: -95}
 
 
+def test_chlem():
+    # Won
+    party = FakePartyResult( points=53
+                        , oudlers=1
+                        , contract=ContractType.garde_sans
+                        , chlem=ChlemType.announced_and_won)
+    scores = compute_party_result_scores(party)
+    assert scores=={1: 1016, 2: 508, 3: -508, 4: -508, 5: -508}
+
+    # Announced and failed
+    party = FakePartyResult( points=56
+                        , oudlers=0
+                        , taker_id=1
+                        , called_player_id=1
+                        , contract=ContractType.garde_contre
+                        , chlem=ChlemType.announced_and_failed)
+    scores = compute_party_result_scores(party)
+    assert scores=={1: -200, 2: 50, 3: 50, 4: 50, 5: 50}
+
+    # Non announced and won
+    party = FakePartyResult( points=37
+                        , oudlers=3
+                        , contract=ContractType.garde
+                        , chlem=ChlemType.non_announced_and_won)
+    scores = compute_party_result_scores(party)
+    assert scores=={1: 504, 2: 252, 3: -252, 4: -252, 5: -252}
+
+
+def test_misere_tete():
+    # Simple misere tête
+    party = FakePartyResult( points=56
+                        , oudlers=0
+                        , contract=ContractType.garde
+                        , misere_tete_players_ids=[4])
+    scores = compute_party_result_scores(party)
+    assert scores=={1: 90, 2: 40, 3: -60, 4: -10, 5: -60}
+
+    # Double misere tête
+    party = FakePartyResult( points=56
+                        , oudlers=0
+                        , contract=ContractType.garde_sans
+                        , misere_tete_players_ids=[2,5])
+    scores = compute_party_result_scores(party)
+    assert scores=={1: 180, 2: 130, 3: -120, 4: -120, 5: -70}
+
+def test_misere_atout():
+    # Simple misere atout
+    party = FakePartyResult( points=56
+                        , oudlers=0
+                        , contract=ContractType.garde
+                        , misere_atout_players_ids=[4])
+    scores = compute_party_result_scores(party)
+    assert scores=={1: 90, 2: 40, 3: -60, 4: -10, 5: -60}
+
+    # Double misere atout
+    party = FakePartyResult( points=56
+                        , oudlers=0
+                        , contract=ContractType.garde_sans
+                        , misere_atout_players_ids=[2,5])
+    scores = compute_party_result_scores(party)
+    assert scores=={1: 180, 2: 130, 3: -120, 4: -120, 5: -70}
