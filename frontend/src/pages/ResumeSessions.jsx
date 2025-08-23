@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getGameSessions } from "../services/api";
 import "./ResumeSessions.css";
 
-export default function ResumeSessionsPage() {
+export default function ResumeSessions() {
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     getGameSessions()
@@ -54,7 +56,11 @@ export default function ResumeSessionsPage() {
       ) : (
         <div className="card-grid">
           {sessions.map((s) => (
-            <article key={s.id} className="session-card">
+            <article
+              key={s.id}
+              className="session-card"
+              onClick={() => navigate(`/session/${s.id}`)}
+            >
               <div className="session-card__top">
                 <div className="session-card__title">
                   <h2>{s.name?.trim() || `Session ${s.id}`}</h2>
@@ -75,16 +81,14 @@ export default function ResumeSessionsPage() {
                 <ul className="score-list">
                   {s.scores.map((sc, idx) => {
                     const initials = sc.player
-                      ? sc.player.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase()
+                      ? sc.player.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase()
                       : "?";
                     const positive = Number(sc.score) >= 0;
                     return (
                       <li key={idx} className="score-item">
                         <div className="score-item__left">
                           <div className="avatar" aria-hidden>{initials}</div>
-                          <span className="player-name">
-                            {sc.player || "Joueur inconnu"}
-                          </span>
+                          <span className="player-name">{sc.player || "Joueur inconnu"}</span>
                         </div>
                         <span className={`score ${positive ? "score--pos" : "score--neg"}`}>
                           {positive ? "+" : ""}

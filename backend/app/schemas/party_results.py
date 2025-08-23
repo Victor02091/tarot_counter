@@ -42,3 +42,14 @@ class PartyResultRead(PartyResultBase):
 
     class Config:
         from_attributes = True
+
+class PartyResultSummary(BaseModel):
+    id: int
+    taker: str
+    called: str
+    points: int
+    create_timestamp: datetime
+
+    class Config:
+        from_attributes = True
+

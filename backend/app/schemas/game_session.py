@@ -2,6 +2,7 @@ from pydantic import BaseModel, field_validator
 from datetime import datetime
 from typing import Optional, List
 from app.schemas.player_score import PlayerScoreSummary
+from app.schemas.party_results import PartyResultSummary
 
 class GameSessionBase(BaseModel):
     name: Optional[str] = None
@@ -35,3 +36,13 @@ class GameSessionSummary(BaseModel):
     nb_parties: int
     scores: List[PlayerScoreSummary]
 
+class GameSessionDetail(BaseModel):
+    id: int
+    name: Optional[str]
+    create_timestamp: datetime
+    players: List[str]  # list of player names in order
+    party_results: List[PartyResultSummary]
+    scores: List[PlayerScoreSummary]
+
+    class Config:
+        from_attributes = True
