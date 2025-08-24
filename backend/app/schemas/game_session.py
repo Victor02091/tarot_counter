@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Optional, List
 from app.schemas.player_score import PlayerScoreSummary
 from app.schemas.party_results import PartyResultSummary
+from app.schemas.player import PlayerRead
 
 class GameSessionBase(BaseModel):
     name: Optional[str] = None
@@ -40,7 +41,7 @@ class GameSessionDetail(BaseModel):
     id: int
     name: Optional[str]
     create_timestamp: datetime
-    players: List[str]  # list of player names in order
+    players: List[PlayerRead]  # instead of just names
     party_results: List[PartyResultSummary]
     scores: List[PlayerScoreSummary]
 

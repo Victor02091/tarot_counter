@@ -1,12 +1,14 @@
 from sqlalchemy.orm import Session
 from app.schemas.game_session import GameSessionCreate, GameSessionSummary, PlayerScoreSummary, GameSessionDetail
 from app.schemas.party_results import PartyResultSummary
+from app.schemas.player import PlayerRead
 from sqlalchemy import func
 from app.models.game_sessions import GameSession
 from app.models.party_results import PartyResult
 from app.models.party_scores import PartyScore
 from app.models.player import Player
 from fastapi import HTTPException
+
 
 
 def create_game_session(db: Session, session: GameSessionCreate):
@@ -26,7 +28,8 @@ def get_game_session(session_id: int, db: Session) -> GameSessionDetail:
     players = [session.player_1, session.player_2, session.player_3, session.player_4]
     if session.player_5:
         players.append(session.player_5)
-    player_names = [f"{p.first_name} {p.last_name}" for p in players]
+
+    player_objs = [PlayerRead.model_validate(p) for p in players] 
 
     # Party results
     party_results = [
@@ -50,7 +53,7 @@ def get_game_session(session_id: int, db: Session) -> GameSessionDetail:
         id=session.id,
         name=session.name,
         create_timestamp=session.create_timestamp,
-        players=player_names,
+        players=player_objs, 
         party_results=party_results,
         scores=scores
     )
