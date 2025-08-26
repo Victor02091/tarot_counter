@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { submitPartyResult } from "../services/api";
 import "./PartyForm.css";
 
 function PartyForm({ players, sessionId }) {
+  const navigate = useNavigate();
+
   const [takerId, setTakerId] = useState(null);
   const [calledId, setCalledId] = useState(null);
   const [contract, setContract] = useState("");
@@ -97,27 +100,14 @@ function PartyForm({ players, sessionId }) {
   
     try {
       await submitPartyResult(result);
-      alert("Résultat soumis avec succès !");
+      // Redirect to session details page
+      navigate(`/session/${sessionId}`);
     } catch (err) {
       console.error("Erreur lors de l'envoi :", err);
       alert("Erreur lors de l'envoi du résultat");
       return;
     }
-  
-    // Reset all states
-    setTakerId(null);
-    setCalledId(null);
-    setContract("");
-    setOudlers(0);
-    setPoints(50);
-    setPetitPlayerId(null);
-    setPetitResult("");
-    setPoignees({ simple: [], double: [], triple: [] });
-    setMiseres({ atout: [], tete: [] });
-    setChlem("");
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
-  
 
   return (
     <div>
