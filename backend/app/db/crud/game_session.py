@@ -1,9 +1,9 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, aliased
 from app.schemas.game_session import GameSessionCreate, GameSessionSummary, PlayerScoreSummary, GameSessionDetail
 from app.schemas.party_results import PartyResultSummary
 from app.schemas.player_score import PlayerScoreSummary
 from app.schemas.player import PlayerRead
-from sqlalchemy import func
+from sqlalchemy import func, desc
 from app.models.game_sessions import GameSession
 from app.models.party_results import PartyResult
 from app.models.party_scores import PartyScore
@@ -80,7 +80,28 @@ def get_game_session(session_id: int, db: Session) -> GameSessionDetail:
     )
 
 def get_sessions_with_scores(db: Session, skip: int = 0, limit: int = 20) -> list[GameSessionSummary]:
-    sessions = db.query(GameSession).offset(skip).limit(limit).all()
+    # Alias PartyResult for latest result per session
+    latest_pr = aliased(PartyResult)
+
+    # Subquery to get latest party_result timestamp per session
+    latest_subq = (
+        db.query(
+            PartyResult.game_session_id,
+            func.max(PartyResult.create_timestamp).label("latest_ts")
+        )
+        .group_by(PartyResult.game_session_id)
+        .subquery()
+    )
+
+    # Join sessions to latest timestamp subquery
+    sessions = (
+        db.query(GameSession)
+        .join(latest_subq, GameSession.id == latest_subq.c.game_session_id)
+        .order_by(desc(latest_subq.c.latest_ts))  # order by latest party_result
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
 
     summaries = []
     for session in sessions:
@@ -91,7 +112,12 @@ def get_sessions_with_scores(db: Session, skip: int = 0, limit: int = 20) -> lis
 
         # Scores aggregated
         scores_raw = (
-            db.query(PartyScore.player_id, func.sum(PartyScore.score), Player.first_name, Player.last_name)
+            db.query(
+                PartyScore.player_id,
+                func.sum(PartyScore.score),
+                Player.first_name,
+                Player.last_name
+            )
             .join(PartyScore.party_result)
             .join(Player, Player.id == PartyScore.player_id)
             .filter(PartyResult.game_session_id == session.id)
