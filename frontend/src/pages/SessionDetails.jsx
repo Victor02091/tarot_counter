@@ -13,7 +13,6 @@ export default function SessionDetails() {
   useEffect(() => {
     setLoading(true);
     setErr("");
-
     getGameSessionById(sessionId)
       .then(setSession)
       .catch((e) => setErr(e.message || "Erreur de chargement"))
@@ -24,51 +23,71 @@ export default function SessionDetails() {
   if (err) return <div>{err}</div>;
   if (!session) return <div>Session introuvable</div>;
 
-  // Compute display names for players
-  const playersWithNames = session.players.map((p) => ({
+  const playersWithNames = (session.players || []).map((p) => ({
     ...p,
-    displayName: `${p.first_name} ${p.last_name}`,
+    displayName: p.first_name || "Joueur",
   }));
 
   return (
     <div className="session-details">
       <h2>{session.name || `Session ${session.id}`}</h2>
 
-      <div className="table-wrapper">
-        <table className="session-table">
-          <thead>
-            <tr>
-              {playersWithNames.map((p, i) => (
-                <th key={i}>
-                  {p.displayName} ({session.scores[i]?.score || 0})
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {session.party_results.map((pr) => (
-              <tr key={pr.id}>
-                {playersWithNames.map((p, idx) => {
-                  const scoreObj = pr.scores?.find((s) => s.player_id === p.id);
-                  const score = scoreObj?.score || 0;
-                  return (
-                    <td
-                      key={idx}
-                      className={
-                        score > 0 ? "score-pos" : score < 0 ? "score-neg" : ""
-                      }
-                    >
-                      {score}
-                    </td>
-                  );
-                })}
-              </tr>
+      <table className="session-table">
+        <thead>
+          <tr>
+            {playersWithNames.map((p, i) => (
+              <th key={p.id ?? i} title={p.displayName}>
+                {p.displayName}
+              </th>
             ))}
-          </tbody>
-        </table>
-      </div>
+          </tr>
+        </thead>
+        <tbody>
+          {session.party_results.map((pr) => (
+            <tr key={pr.id}>
+              {playersWithNames.map((p, idx) => {
+                const scoreObj = pr.scores?.find((s) => s.player_id === p.id);
+                const score = Number(scoreObj?.score ?? 0);
+                return (
+                  <td
+                    key={`${pr.id}-${p.id ?? idx}`}
+                    className={
+                      score > 0 ? "score-pos" : score < 0 ? "score-neg" : ""
+                    }
+                  >
+                    {score}
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+        <tfoot>
+          <tr>
+            {playersWithNames.map((p, i) => {
+              const total = session.scores?.[i]?.score ?? 0;
 
-      <div style={{ textAlign: "center" }}>
+              // Compute winner/loser
+              const totals = session.scores?.map((s) => s.score ?? 0) || [];
+              const maxScore = Math.max(...totals);
+              const minScore = Math.min(...totals);
+
+              let className = "total-score"; // default
+              if (total === maxScore && maxScore !== minScore) className += " total-winner";
+              if (total === minScore && maxScore !== minScore) className += " total-loser";
+
+              return (
+                <td key={`total-${p.id ?? i}`} className={className}>
+                  {total}
+                </td>
+              );
+            })}
+          </tr>
+        </tfoot>
+
+      </table>
+
+      <div className="actions">
         <button
           className="btn-primary"
           onClick={() =>
