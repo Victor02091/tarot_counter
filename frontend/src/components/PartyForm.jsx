@@ -299,13 +299,14 @@ function PartyForm({ players, sessionId }) {
             <button
               key={option}
               className={chlem === option ? "selected" : ""}
-              onClick={() => setChlem(option)}
+              onClick={() => setChlem(chlem === option ? "" : option)}
             >
               {option}
             </button>
           ))}
         </div>
       </fieldset>
+
 
       <button onClick={handleSubmit}>Valider la partie</button>
     </div>
