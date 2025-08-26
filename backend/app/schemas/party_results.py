@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime
 from enum import Enum
+from app.schemas.player_score import PlayerScoreSummary
 
 class ContractType(str, Enum):  
     petite = "Petite"
@@ -49,6 +50,7 @@ class PartyResultSummary(BaseModel):
     called: str
     points: int
     create_timestamp: datetime
+    scores: List[PlayerScoreSummary]
 
     class Config:
         from_attributes = True

@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
 class PlayerScoreSummary(BaseModel):
-    player: str
+    player_id: int
     score: int
+    player: str

@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from app.schemas.game_session import GameSessionCreate, GameSessionSummary, PlayerScoreSummary, GameSessionDetail
 from app.schemas.party_results import PartyResultSummary
+from app.schemas.player_score import PlayerScoreSummary
 from app.schemas.player import PlayerRead
 from sqlalchemy import func
 from app.models.game_sessions import GameSession
@@ -38,7 +39,15 @@ def get_game_session(session_id: int, db: Session) -> GameSessionDetail:
             taker=f"{pr.taker.first_name} {pr.taker.last_name}",
             called=f"{pr.called.first_name} {pr.called.last_name}",
             points=pr.points,
-            create_timestamp=pr.create_timestamp
+            create_timestamp=pr.create_timestamp,
+            scores=[
+                PlayerScoreSummary(
+                    player_id=score.player_id,
+                    score=score.score,
+                    player=f"{score.player.first_name} {score.player.last_name}"
+                )
+                for score in pr.scores
+            ]
         )
         for pr in session.party_results
     ]
@@ -46,8 +55,20 @@ def get_game_session(session_id: int, db: Session) -> GameSessionDetail:
     # Total scores
     scores = []
     for p in players:
-        total_score = sum(score.score for pr in session.party_results for score in pr.scores if score.player_id == p.id)
-        scores.append(PlayerScoreSummary(player=f"{p.first_name} {p.last_name}", score=total_score))
+        total_score = sum(
+            score.score
+            for pr in session.party_results
+            for score in pr.scores
+            if score.player_id == p.id
+        )
+        scores.append(
+            PlayerScoreSummary(
+                player_id=p.id,
+                score=total_score,
+                player=f"{p.first_name} {p.last_name}"
+            )
+        )
+
 
     return GameSessionDetail(
         id=session.id,
@@ -59,48 +80,42 @@ def get_game_session(session_id: int, db: Session) -> GameSessionDetail:
     )
 
 def get_sessions_with_scores(db: Session, skip: int = 0, limit: int = 20) -> list[GameSessionSummary]:
-    sessions = (
-        db.query(GameSession)
-        .order_by(GameSession.create_timestamp.desc())
-        .offset(skip)
-        .limit(limit)
-        .all()
-    )
+    sessions = db.query(GameSession).offset(skip).limit(limit).all()
 
-    results: list[GameSessionSummary] = []
+    summaries = []
     for session in sessions:
-        # Count parties
-        nb_parties = (
-            db.query(func.count(PartyResult.id))
-            .filter(PartyResult.game_session_id == session.id)
-            .scalar()
-        )
+        # Players
+        players = [session.player_1, session.player_2, session.player_3, session.player_4]
+        if session.player_5:
+            players.append(session.player_5)
 
-        # Aggregate scores with concatenated firstname + lastname
+        # Scores aggregated
         scores_raw = (
-            db.query(
-                func.concat(Player.first_name, ' ', Player.last_name).label('player_name'),
-                func.sum(PartyScore.score)
-            )
-            .join(PartyScore, PartyScore.player_id == Player.id)
-            .join(PartyResult, PartyResult.id == PartyScore.party_result_id)
+            db.query(PartyScore.player_id, func.sum(PartyScore.score), Player.first_name, Player.last_name)
+            .join(PartyScore.party_result)
+            .join(Player, Player.id == PartyScore.player_id)
             .filter(PartyResult.game_session_id == session.id)
-            .group_by(Player.id, Player.first_name, Player.last_name)
+            .group_by(PartyScore.player_id, Player.first_name, Player.last_name)
             .all()
         )
 
         scores: list[PlayerScoreSummary] = [
-            PlayerScoreSummary(player=s[0], score=s[1]) for s in scores_raw
+            PlayerScoreSummary(
+                player_id=s[0],
+                score=s[1] or 0,
+                player=f"{s[2]} {s[3]}".strip()
+            )
+            for s in scores_raw
         ]
 
-        results.append(
+        summaries.append(
             GameSessionSummary(
                 id=session.id,
                 name=session.name,
                 create_timestamp=session.create_timestamp,
-                nb_parties=nb_parties,
+                nb_parties=len(session.party_results),
                 scores=scores,
             )
         )
 
-    return results
+    return summaries
