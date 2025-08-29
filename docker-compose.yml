@@ -12,7 +12,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U victor_user -d tarot_db -h localhost"]
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB -h localhost"]
       interval: 1s
       timeout: 2s
       retries: 25
@@ -23,7 +23,7 @@ services:
     container_name: tarot-backend
     volumes:
       - ./backend:/app
-      - /app/.venv # Avoid linking local .venv
+      - /app/.venv # Avoid binding local .venv
     ports:
       - "8000:8000"
     depends_on:
@@ -36,13 +36,13 @@ services:
     build:
       context: ./backend
     container_name: tarot-migrate
-    command: uv run alembic upgrade head
+    command: alembic upgrade head
     depends_on:
       db:
         condition: service_healthy
     volumes:
       - ./backend:/app
-      - /app/.venv # Avoid linking local .venv
+      - /app/.venv # Avoid binding local .venv
     environment:
       - DATABASE_URL=postgresql+psycopg2://victor_user:victor_password@db:5432/tarot_db
 
@@ -52,7 +52,7 @@ services:
     container_name: tarot-frontend
     volumes:
       - ./frontend:/app
-      - /app/node_modules # Avoid linking local modules
+      - /app/node_modules # Avoid binding local modules
     ports:
       - "5173:5173"
     depends_on:
