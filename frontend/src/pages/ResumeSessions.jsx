@@ -7,6 +7,7 @@ export default function ResumeSessions() {
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
+  const [toDelete, setToDelete] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,6 +23,12 @@ export default function ResumeSessions() {
       month: "short",
       year: "numeric",
     });
+
+  const confirmDelete = (id) => {
+    // TODO: replace with API call
+    setSessions((prev) => prev.filter((s) => s.id !== id));
+    setToDelete(null);
+  };
 
   return (
     <div className="resume-page">
@@ -56,51 +63,108 @@ export default function ResumeSessions() {
       ) : (
         <div className="card-grid">
           {sessions.map((s) => (
-            <article
-              key={s.id}
-              className="session-card"
-              onClick={() => navigate(`/session/${s.id}`)}
-            >
-              <div className="session-card__top">
-                <div className="session-card__title">
-                  <h2>{s.name?.trim() || `Session ${s.id}`}</h2>
+            <article key={s.id} className="session-card">
+              {/* Floating Delete Button */}
+              <button
+                className="delete-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setToDelete(s.id);
+                }}
+                aria-label="Supprimer la session"
+                title="Supprimer cette session"
+              >
+                🗑️
+              </button>
+
+              {/* Card content clickable */}
+              <div
+                className="card-content"
+                onClick={() => navigate(`/session/${s.id}`)}
+              >
+                <div className="session-card__top">
+                  <div className="session-card__title">
+                    <h2>{s.name?.trim() || `Session ${s.id}`}</h2>
+                  </div>
+
+                  <div className="session-card__meta">
+                    <span className="chip chip--date">
+                      {formatDate(s.create_timestamp)}
+                    </span>
+                    <span className="chip chip--count">
+                      🎲 {s.nb_parties} partie{s.nb_parties > 1 ? "s" : ""}
+                    </span>
+                  </div>
                 </div>
 
-                <div className="session-card__meta">
-                  <span className="chip chip--date">{formatDate(s.create_timestamp)}</span>
-                  <span className="chip chip--count">
-                    🎲 {s.nb_parties} partie{s.nb_parties > 1 ? "s" : ""}
-                  </span>
+                <div className="divider" />
+
+                <div className="scores">
+                  <h3>Scores cumulés</h3>
+                  <ul className="score-list">
+                    {s.scores.map((sc, idx) => {
+                      const initials = sc.player
+                        ? sc.player
+                            .split(" ")
+                            .map((w) => w[0])
+                            .join("")
+                            .slice(0, 2)
+                            .toUpperCase()
+                        : "?";
+                      const positive = Number(sc.score) >= 0;
+                      return (
+                        <li key={idx} className="score-item">
+                          <div className="score-item__left">
+                            <div className="avatar" aria-hidden>
+                              {initials}
+                            </div>
+                            <span className="player-name">
+                              {sc.player || "Joueur inconnu"}
+                            </span>
+                          </div>
+                          <span
+                            className={`score ${
+                              positive ? "score--pos" : "score--neg"
+                            }`}
+                          >
+                            {positive ? "+" : ""}
+                            {sc.score}
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
                 </div>
-              </div>
-
-              <div className="divider" />
-
-              <div className="scores">
-                <h3>Scores cumulés</h3>
-                <ul className="score-list">
-                  {s.scores.map((sc, idx) => {
-                    const initials = sc.player
-                      ? sc.player.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase()
-                      : "?";
-                    const positive = Number(sc.score) >= 0;
-                    return (
-                      <li key={idx} className="score-item">
-                        <div className="score-item__left">
-                          <div className="avatar" aria-hidden>{initials}</div>
-                          <span className="player-name">{sc.player || "Joueur inconnu"}</span>
-                        </div>
-                        <span className={`score ${positive ? "score--pos" : "score--neg"}`}>
-                          {positive ? "+" : ""}
-                          {sc.score}
-                        </span>
-                      </li>
-                    );
-                  })}
-                </ul>
               </div>
             </article>
           ))}
+        </div>
+      )}
+
+      {/* Confirmation Modal */}
+      {toDelete && (
+        <div className="modal-backdrop" onClick={() => setToDelete(null)}>
+          <div
+            className="modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3>Supprimer la session ?</h3>
+            <p>
+              Cette action est irréversible. Voulez-vous vraiment supprimer cette
+              session ?
+            </p>
+            <div className="modal-actions">
+              <button className="btn-cancel" onClick={() => setToDelete(null)}>
+                Annuler
+              </button>
+              <button
+                className="btn-danger"
+                onClick={() => confirmDelete(toDelete)}
+              >
+                Supprimer
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
