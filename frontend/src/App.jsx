@@ -4,7 +4,9 @@ import NewPartyFormWrapper from "./pages/NewPartyFormWrapper";
 import PartyFormWrapper from "./pages/PartyFormWrapper";
 import ResumeSessions from "./pages/ResumeSessions";
 import SessionDetails from "./pages/SessionDetails";
+import HomeButton from "./components/HomeButton";
 import "./App.css";
+
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
             <Route path="/resume" element={<ResumeSessions />} />
           </Routes>
         </div>
+
+        <HomeButton />
       </div>
     </Router>
   );
