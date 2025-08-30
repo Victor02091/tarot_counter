@@ -211,3 +211,11 @@ __marimo__/
 
 # Vscode config
 *.vscode
+
+# SSH
+*.pem
+
+# Terraform
+.terraform
+*.terraform.*
+*.tfstate*
