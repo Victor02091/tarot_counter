@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getGameSessions } from "../services/api";
+import { getGameSessions, deleteGameSession } from "../services/api";
 import "./ResumeSessions.css";
 
 export default function ResumeSessions() {
@@ -24,11 +24,15 @@ export default function ResumeSessions() {
       year: "numeric",
     });
 
-  const confirmDelete = (id) => {
-    // TODO: replace with API call
-    setSessions((prev) => prev.filter((s) => s.id !== id));
-    setToDelete(null);
-  };
+    const confirmDelete = async (id) => {
+      try {
+        await deleteGameSession(id); 
+        setSessions((prev) => prev.filter((s) => s.id !== id));
+        setToDelete(null);
+      } catch (e) {
+        alert(e.message || "Erreur lors de la suppression");
+      }
+    };
 
   return (
     <div className="resume-page">

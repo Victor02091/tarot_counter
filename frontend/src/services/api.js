@@ -92,3 +92,16 @@ export async function getGameSessionById(id) {
 
   return await res.json();
 }
+
+export async function deleteGameSession(sessionId) {
+  const res = await fetch(`${API_URL}/game-sessions/${sessionId}`, {
+    method: "DELETE",
+  });
+
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.detail || "Erreur serveur");
+  }
+
+  return true;
+}

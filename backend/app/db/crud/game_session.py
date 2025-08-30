@@ -145,3 +145,11 @@ def get_sessions_with_scores(db: Session, skip: int = 0, limit: int = 20) -> lis
         )
 
     return summaries
+
+def delete_game_session(db: Session, session_id: int) -> bool:
+    session_obj = db.query(GameSession).filter(GameSession.id == session_id).first()
+    if not session_obj:
+        return False
+    db.delete(session_obj)
+    db.commit()
+    return True

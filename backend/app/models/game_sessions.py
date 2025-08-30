@@ -22,3 +22,9 @@ class GameSession(Base):
     player_4 = relationship("Player", foreign_keys=[player_4_id])
     player_5 = relationship("Player", foreign_keys=[player_5_id])
 
+    # Cascade delete: delete all party_results when session is deleted
+    party_results = relationship(
+        "PartyResult",
+        back_populates="game_session",
+        cascade="all, delete-orphan"
+    )
