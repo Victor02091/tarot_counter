@@ -291,15 +291,19 @@
 .modal p { margin: 0 0 16px; color: var(--text-700); font-size: 14px; }
 .modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
 .btn-cancel {
-  background: #f3f4f6;
-  border: none;
+  background: #e5e7eb; 
+  color: #1f2937;       
   padding: 8px 14px;
   border-radius: var(--radius-full);
   cursor: pointer;
   font-size: 14px;
+  font-weight: 600;
   transition: background 0.2s ease;
 }
-.btn-cancel:hover { background: #e5e7eb; }
+
+.btn-cancel:hover {
+  background: #d1d5db;
+}
 .btn-danger {
   background: var(--red);
   color: white;
