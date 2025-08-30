@@ -23,8 +23,7 @@ WORKDIR /app
 COPY uv.lock pyproject.toml ./
 
 # Install dependencies using uv
-RUN --mount=type=cache,target=/root/.cache/uv \ 
-uv sync --frozen --no-install-project --no-dev
+RUN uv sync --frozen --no-install-project --no-dev
 
 # Copy the rest of the app
 COPY ./app ./app
@@ -32,8 +31,7 @@ COPY ./alembic ./alembic
 COPY ./alembic.ini ./alembic.ini
 
 # Build project
-RUN --mount=type=cache,target=/root/.cache/uv \ 
-uv sync --frozen --no-dev
+RUN uv sync --frozen --no-dev
 
 ########## Final Image ###########
 
