@@ -30,7 +30,13 @@ services:
       migrate:
         condition: service_completed_successfully
     environment:
-      - DATABASE_URL=postgresql+psycopg2://victor_user:victor_password@db:5432/tarot_db
+      - ENVIRONMENT=prod
+      - FRONTEND_URL=http://localhost:5173
+      - DB_USERNAME=victor_user
+      - DB_PASSWORD=victor_password
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=tarot_db
 
   migrate:
     build:
@@ -44,7 +50,13 @@ services:
       - ./backend:/app
       - /app/.venv # Avoid binding local .venv
     environment:
-      - DATABASE_URL=postgresql+psycopg2://victor_user:victor_password@db:5432/tarot_db
+      - ENVIRONMENT=prod
+      - FRONTEND_URL=http://localhost:5173
+      - DB_USERNAME=victor_user
+      - DB_PASSWORD=victor_password
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=tarot_db
 
   frontend:
     build:

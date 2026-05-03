@@ -32,12 +32,16 @@ uv sync
 
 ### 2. Database migration
 
-Create a standard .env file and set your db address as DATABASE_URL.
+Create a standard .env file and set your db information.
 
 Exemple :
 
 ```bash
-DATABASE_URL="postgresql+psycopg2://victor_user:victor_password@localhost:5432/tarot_db"
+DB_USERNAME="victor_user"
+DB_PASSWORD="victor_password"
+DB_HOST="localhost"
+DB_PORT="5432"
+DB_NAME="tarot_db"
 ```
 
 If your database is new, you can create all required tables using this command (make sure your db is accessible):
