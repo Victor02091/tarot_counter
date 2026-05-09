@@ -7,7 +7,10 @@ interface AddPlayerFormProps {
   onSubmit: (player: Player) => void;
 }
 
-const AddPlayerForm: React.FC<AddPlayerFormProps> = ({ onCancel, onSubmit }) => {
+const AddPlayerForm: React.FC<AddPlayerFormProps> = ({
+  onCancel,
+  onSubmit,
+}) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [loading, setLoading] = useState(false);
@@ -73,6 +76,6 @@ const AddPlayerForm: React.FC<AddPlayerFormProps> = ({ onCancel, onSubmit }) => 
       </form>
     </div>
   );
-}
+};
 
 export default AddPlayerForm;

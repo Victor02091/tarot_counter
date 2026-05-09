@@ -10,8 +10,8 @@
   --brand-200: #e0e7ff;
   --green: #16a34a;
   --red: #dc2626;
-  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
-  --shadow-md: 0 10px 30px rgba(0,0,0,0.10);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.1);
   --radius-xl: 18px;
   --radius-full: 999px;
 }
@@ -68,7 +68,9 @@
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-sm);
   padding: 16px 16px 14px;
-  transition: transform .2s ease, box-shadow .2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -132,7 +134,7 @@
 /* Divider */
 .divider {
   height: 1px;
-  background: rgba(0,0,0,0.06);
+  background: rgba(0, 0, 0, 0.06);
   margin: 12px 0 8px;
 }
 
@@ -141,7 +143,7 @@
   margin: 0 0 8px;
   font-size: 13px;
   color: var(--text-700);
-  letter-spacing: .2px;
+  letter-spacing: 0.2px;
 }
 .score-list {
   list-style: none;
@@ -155,7 +157,7 @@
   align-items: center;
   justify-content: space-between;
   background: #f9fafb;
-  border: 1px solid rgba(0,0,0,0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   border-radius: 12px;
   padding: 8px 10px;
   min-width: 0;
@@ -192,13 +194,19 @@
 }
 .score {
   font-weight: 800;
-  font-feature-settings: "tnum" 1, "lnum" 1;
+  font-feature-settings:
+    "tnum" 1,
+    "lnum" 1;
   font-size: 13px;
   flex-shrink: 0;
   white-space: nowrap;
 }
-.score--pos { color: var(--green); }
-.score--neg { color: var(--red); }
+.score--pos {
+  color: var(--green);
+}
+.score--neg {
+  color: var(--red);
+}
 
 /* Empty state */
 .empty-state {
@@ -223,11 +231,21 @@
   border-radius: 6px;
   margin-bottom: 8px;
 }
-.skeleton-line.w-60 { width: 60%; }
-.skeleton-line.w-40 { width: 40%; }
-.skeleton-line.w-56 { width: 56%; }
-.skeleton-line.w-44 { width: 44%; }
-.skeleton-line.w-52 { width: 52%; }
+.skeleton-line.w-60 {
+  width: 60%;
+}
+.skeleton-line.w-40 {
+  width: 40%;
+}
+.skeleton-line.w-56 {
+  width: 56%;
+}
+.skeleton-line.w-44 {
+  width: 44%;
+}
+.skeleton-line.w-52 {
+  width: 52%;
+}
 .skeleton-chip {
   height: 22px;
   width: 40%;
@@ -235,11 +253,18 @@
   border-radius: var(--radius-full);
   margin-bottom: 8px;
 }
-.skeleton-list { display: grid; gap: 6px; }
+.skeleton-list {
+  display: grid;
+  gap: 6px;
+}
 
 @keyframes skeleton-loading {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 /* Floating delete button */
@@ -257,18 +282,30 @@
   align-items: center;
   justify-content: center;
   z-index: 10;
-  transition: background 0.2s ease, transform 0.15s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease;
   cursor: pointer;
 }
-.delete-btn:hover { background: rgba(220, 38, 38, 0.15); transform: scale(1.1); }
-.delete-btn:active { transform: scale(0.95); }
-.delete-btn svg { pointer-events: none; width: 16px; height: 16px; stroke: currentColor; }
+.delete-btn:hover {
+  background: rgba(220, 38, 38, 0.15);
+  transform: scale(1.1);
+}
+.delete-btn:active {
+  transform: scale(0.95);
+}
+.delete-btn svg {
+  pointer-events: none;
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+}
 
 /* Modal */
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -284,15 +321,33 @@
   animation: fadeInScale 0.2s ease;
 }
 @keyframes fadeInScale {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
-.modal h3 { margin: 0 0 8px; font-size: 18px; color: var(--text-900); }
-.modal p { margin: 0 0 16px; color: var(--text-700); font-size: 14px; }
-.modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+.modal h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  color: var(--text-900);
+}
+.modal p {
+  margin: 0 0 16px;
+  color: var(--text-700);
+  font-size: 14px;
+}
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
 .btn-cancel {
-  background: #e5e7eb; 
-  color: #1f2937;       
+  background: #e5e7eb;
+  color: #1f2937;
   padding: 8px 14px;
   border-radius: var(--radius-full);
   cursor: pointer;
@@ -314,4 +369,6 @@
   font-size: 14px;
   transition: background 0.2s ease;
 }
-.btn-danger:hover { background: #b91c1c; }
+.btn-danger:hover {
+  background: #b91c1c;
+}

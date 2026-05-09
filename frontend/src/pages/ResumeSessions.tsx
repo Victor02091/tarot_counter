@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getGameSessions, deleteGameSession, type GameSession } from "../services/api";
+import {
+  getGameSessions,
+  deleteGameSession,
+  type GameSession,
+} from "../services/api";
 import "./ResumeSessions.css";
 
 export default function ResumeSessions() {
@@ -24,15 +28,17 @@ export default function ResumeSessions() {
       year: "numeric",
     });
 
-    const confirmDelete = async (id: number) => {
-      try {
-        await deleteGameSession(id); 
-        setSessions((prev) => prev.filter((s) => s.id !== id));
-        setToDelete(null);
-      } catch (e: any) {
-        alert(e.message || "Erreur lors de la suppression");
-      }
-    };
+  const confirmDelete = async (id: number) => {
+    try {
+      await deleteGameSession(id);
+      setSessions((prev) => prev.filter((s) => s.id !== id));
+      setToDelete(null);
+    } catch (e: unknown) {
+      const errorMessage =
+        e instanceof Error ? e.message : "Erreur lors de la suppression";
+      alert(errorMessage);
+    }
+  };
 
   return (
     <div className="resume-page">
@@ -148,14 +154,11 @@ export default function ResumeSessions() {
       {/* Confirmation Modal */}
       {toDelete && (
         <div className="modal-backdrop" onClick={() => setToDelete(null)}>
-          <div
-            className="modal"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
             <h3>Supprimer la session ?</h3>
             <p>
-              Cette action est irréversible. Voulez-vous vraiment supprimer cette
-              session ?
+              Cette action est irréversible. Voulez-vous vraiment supprimer
+              cette session ?
             </p>
             <div className="modal-actions">
               <button className="btn-cancel" onClick={() => setToDelete(null)}>

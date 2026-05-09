@@ -7,7 +7,9 @@ export default function NewPartyFormWrapper() {
   return (
     <NewPartyForm
       onNext={(data) =>
-        navigate(`/party/${data.sessionId}`, { state: { players: data.players } })
+        navigate(`/party/${data.sessionId}`, {
+          state: { players: data.players },
+        })
       }
     />
   );

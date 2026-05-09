@@ -7,7 +7,6 @@ import SessionDetails from "./pages/SessionDetails";
 import HomeButton from "./components/HomeButton";
 import "./App.css";
 
-
 function App() {
   return (
     <Router>
@@ -20,7 +19,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePageWrapper />} />
             <Route path="/new-party" element={<NewPartyFormWrapper />} />
-            <Route path="/session/:sessionId" element={<SessionDetails />} /> 
+            <Route path="/session/:sessionId" element={<SessionDetails />} />
             <Route path="/party/:sessionId" element={<PartyFormWrapper />} />
             <Route path="/resume" element={<ResumeSessions />} />
           </Routes>

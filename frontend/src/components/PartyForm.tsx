@@ -23,11 +23,18 @@ const PartyForm: React.FC<PartyFormProps> = ({ players, sessionId }) => {
   const [points, setPoints] = useState<number>(50);
   const [petitPlayerId, setPetitPlayerId] = useState<number | null>(null);
   const [petitResult, setPetitResult] = useState<string>("");
-  const [poignees, setPoignees] = useState<{ simple: number[]; double: number[]; triple: number[] }>({ 
-    simple: [], double: [], triple: [] 
+  const [poignees, setPoignees] = useState<{
+    simple: number[];
+    double: number[];
+    triple: number[];
+  }>({
+    simple: [],
+    double: [],
+    triple: [],
   });
-  const [miseres, setMiseres] = useState<{ atout: number[]; tete: number[] }>({ 
-    atout: [], tete: [] 
+  const [miseres, setMiseres] = useState<{ atout: number[]; tete: number[] }>({
+    atout: [],
+    tete: [],
   });
   const [chlem, setChlem] = useState<string>("");
 
@@ -40,7 +47,10 @@ const PartyForm: React.FC<PartyFormProps> = ({ players, sessionId }) => {
     });
   };
 
-  const togglePoignee = (type: "simple" | "double" | "triple", playerId: number) => {
+  const togglePoignee = (
+    type: "simple" | "double" | "triple",
+    playerId: number,
+  ) => {
     setPoignees((prev) => {
       const updated = prev[type].includes(playerId)
         ? prev[type].filter((p) => p !== playerId)
@@ -64,11 +74,16 @@ const PartyForm: React.FC<PartyFormProps> = ({ players, sessionId }) => {
 
   const getTargetScore = () => {
     switch (oudlers) {
-      case 0: return 56;
-      case 1: return 51;
-      case 2: return 41;
-      case 3: return 36;
-      default: return 0;
+      case 0:
+        return 56;
+      case 1:
+        return 51;
+      case 2:
+        return 41;
+      case 3:
+        return 36;
+      default:
+        return 0;
     }
   };
 
@@ -77,23 +92,23 @@ const PartyForm: React.FC<PartyFormProps> = ({ players, sessionId }) => {
   const contractWon = diff >= 0;
 
   const handleSubmit = async () => {
-    let missing: string[] = [];
+    const missing: string[] = [];
     if (takerId === null) missing.push("le preneur");
     if (calledId === null) missing.push("le joueur appelé");
     if (!contract) missing.push("le contrat");
-  
+
     if (missing.length > 0) {
       alert(
-        `Veuillez renseigner ${missing.join(", ").replace(/,([^,]*)$/, " et$1")} pour valider la partie.`
+        `Veuillez renseigner ${missing.join(", ").replace(/,([^,]*)$/, " et$1")} pour valider la partie.`,
       );
       return;
     }
-  
+
     // Map petitResult string to boolean or null
     let petitWon: boolean | null = null;
     if (petitResult === "gagne") petitWon = true;
     else if (petitResult === "perdu") petitWon = false;
-  
+
     const result: PartyResult = {
       game_session_id: Number(sessionId),
       taker_id: takerId!,
@@ -110,7 +125,7 @@ const PartyForm: React.FC<PartyFormProps> = ({ players, sessionId }) => {
       misere_atout_players_ids: miseres.atout,
       chlem: chlem || null,
     };
-  
+
     try {
       await submitPartyResult(result);
       // Redirect to session details page
@@ -212,7 +227,9 @@ const PartyForm: React.FC<PartyFormProps> = ({ players, sessionId }) => {
         </div>
 
         <div className="score-control-inline">
-          <button className="round-button" onClick={removePoint}>-</button>
+          <button className="round-button" onClick={removePoint}>
+            -
+          </button>
           <input
             type="range"
             min="0"
@@ -220,7 +237,9 @@ const PartyForm: React.FC<PartyFormProps> = ({ players, sessionId }) => {
             value={points}
             onChange={(e) => setPoints(Number(e.target.value))}
           />
-          <button className="round-button" onClick={addPoint}>+</button>
+          <button className="round-button" onClick={addPoint}>
+            +
+          </button>
         </div>
       </div>
 
@@ -235,8 +254,8 @@ const PartyForm: React.FC<PartyFormProps> = ({ players, sessionId }) => {
                   ? petitResult === "gagne"
                     ? "success"
                     : petitResult === "perdu"
-                    ? "danger"
-                    : "selected"
+                      ? "danger"
+                      : "selected"
                   : ""
               }
               onClick={() => togglePetit(p.id)}
@@ -259,7 +278,11 @@ const PartyForm: React.FC<PartyFormProps> = ({ players, sessionId }) => {
         {(["simple", "double", "triple"] as const).map((type) => (
           <div key={type}>
             <label>
-              {type === "simple" ? "Simple (8 atouts)" : type === "double" ? "Double (10 atouts)" : "Triple (13 atouts)"}
+              {type === "simple"
+                ? "Simple (8 atouts)"
+                : type === "double"
+                  ? "Double (10 atouts)"
+                  : "Triple (13 atouts)"}
             </label>
             <div className="button-group no-wrap-buttons">
               {players.map((p) => (
@@ -307,22 +330,23 @@ const PartyForm: React.FC<PartyFormProps> = ({ players, sessionId }) => {
       <fieldset>
         <legend>Chelem</legend>
         <div className="button-group no-wrap-buttons">
-          {["Annoncé et passé", "Non annoncé et passé", "Annoncé et chuté"].map((option) => (
-            <button
-              key={option}
-              className={chlem === option ? "selected" : ""}
-              onClick={() => setChlem(chlem === option ? "" : option)}
-            >
-              {option}
-            </button>
-          ))}
+          {["Annoncé et passé", "Non annoncé et passé", "Annoncé et chuté"].map(
+            (option) => (
+              <button
+                key={option}
+                className={chlem === option ? "selected" : ""}
+                onClick={() => setChlem(chlem === option ? "" : option)}
+              >
+                {option}
+              </button>
+            ),
+          )}
         </div>
       </fieldset>
-
 
       <button onClick={handleSubmit}>Valider la partie</button>
     </div>
   );
-}
+};
 
 export default PartyForm;

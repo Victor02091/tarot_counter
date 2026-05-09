@@ -61,7 +61,9 @@ export interface PlayerScore {
   score: number;
 }
 
-export async function submitPartyResult(result: PartyResult): Promise<PartyResult> {
+export async function submitPartyResult(
+  result: PartyResult,
+): Promise<PartyResult> {
   const res = await fetch(`${API_URL}/party-results/`, {
     method: "POST",
     headers: {
@@ -115,7 +117,9 @@ export async function getPlayers(): Promise<Player[]> {
   return players;
 }
 
-export async function createGameSession(session: NewGameSession): Promise<GameSession> {
+export async function createGameSession(
+  session: NewGameSession,
+): Promise<GameSession> {
   const res = await fetch(`${API_URL}/game-sessions/`, {
     method: "POST",
     headers: {
@@ -132,8 +136,13 @@ export async function createGameSession(session: NewGameSession): Promise<GameSe
   return await res.json();
 }
 
-export async function getGameSessions(skip = 0, limit = 20): Promise<GameSession[]> {
-  const res = await fetch(`${API_URL}/game-sessions?skip=${skip}&limit=${limit}`);
+export async function getGameSessions(
+  skip = 0,
+  limit = 20,
+): Promise<GameSession[]> {
+  const res = await fetch(
+    `${API_URL}/game-sessions?skip=${skip}&limit=${limit}`,
+  );
 
   if (!res.ok) {
     const err = await res.json();
@@ -143,9 +152,11 @@ export async function getGameSessions(skip = 0, limit = 20): Promise<GameSession
   return await res.json();
 }
 
-export async function getGameSessionById(id: string | number): Promise<GameSession> {
+export async function getGameSessionById(
+  id: string | number,
+): Promise<GameSession> {
   const res = await fetch(`${API_URL}/game-sessions/${id}`);
-  
+
   if (!res.ok) {
     const err = await res.json();
     throw new Error(err.detail || "Erreur serveur");

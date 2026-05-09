@@ -12,6 +12,7 @@ export default function SessionDetails() {
 
   useEffect(() => {
     if (!sessionId) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     setErr("");
     getGameSessionById(sessionId)
@@ -74,8 +75,10 @@ export default function SessionDetails() {
               const minScore = Math.min(...totals);
 
               let className = "total-score"; // default
-              if (total === maxScore && maxScore !== minScore) className += " total-winner";
-              if (total === minScore && maxScore !== minScore) className += " total-loser";
+              if (total === maxScore && maxScore !== minScore)
+                className += " total-winner";
+              if (total === minScore && maxScore !== minScore)
+                className += " total-loser";
 
               return (
                 <td key={`total-${p.id ?? i}`} className={className}>
@@ -85,7 +88,6 @@ export default function SessionDetails() {
             })}
           </tr>
         </tfoot>
-
       </table>
 
       <div className="actions">

@@ -1,79 +1,78 @@
 .session-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    font-size: 13px; /* uniform size for header, body, totals */
-    border-radius: var(--radius-xl);
-    overflow: hidden;
-    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
-  }
-  
-  /* Header names */
-  .session-table th {
-    padding: 8px 6px;
-    font-weight: 600;
-    text-align: center;
-    color: var(--brand);
-    border-bottom: 1px solid rgba(0,0,0,0.06);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 90px;
-  }
-  
-  /* Body cells */
-  .session-table td {
-    padding: 8px 6px;
-    text-align: center;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
-    color: var(--text-700);
-  }
-  
-  /* Alternating rows */
-  .session-table tbody tr:nth-child(even) {
-    background: #f9fafb;
-  }
-  
-  /* Scores coloring */
-  .session-table td.score-pos {
-    color: var(--green);
-    font-weight: 700;
-  }
-  .session-table td.score-neg {
-    color: var(--red);
-    font-weight: 700;
-  }
-  
-  /* Totals row: distinct background + subtle shadow */
-  .session-table tfoot td {
-    background: linear-gradient(90deg, #eef2ff, #e0e7ff);
-    font-weight: 700;
-    color: var(--brand);
-    border-top: 2px solid var(--brand);
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
-    border-radius: 0; /* keep straight edges with table */
-  }
-    
-    /* Base totals */
-    .session-table tfoot td {
-        font-weight: 700;
-        font-size: 13px;
-        border-top: 2px solid var(--brand);
-        padding: 8px 4px;
-        text-align: center;
-        color: var(--text-900);
-        background: #eef2ff; /* neutral soft background */
-    }
-    
-    /* Winner highlight */
-    .session-table tfoot td.total-winner {
-        background: #d1fae5; /* greenish */
-        color: var(--green);
-    }
-    
-    /* Loser highlight */
-    .session-table tfoot td.total-loser {
-        background: #fee2e2; /* reddish */
-        color: var(--red);
-    }
-    
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px; /* uniform size for header, body, totals */
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+/* Header names */
+.session-table th {
+  padding: 8px 6px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--brand);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 90px;
+}
+
+/* Body cells */
+.session-table td {
+  padding: 8px 6px;
+  text-align: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  color: var(--text-700);
+}
+
+/* Alternating rows */
+.session-table tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+/* Scores coloring */
+.session-table td.score-pos {
+  color: var(--green);
+  font-weight: 700;
+}
+.session-table td.score-neg {
+  color: var(--red);
+  font-weight: 700;
+}
+
+/* Totals row: distinct background + subtle shadow */
+.session-table tfoot td {
+  background: linear-gradient(90deg, #eef2ff, #e0e7ff);
+  font-weight: 700;
+  color: var(--brand);
+  border-top: 2px solid var(--brand);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+  border-radius: 0; /* keep straight edges with table */
+}
+
+/* Base totals */
+.session-table tfoot td {
+  font-weight: 700;
+  font-size: 13px;
+  border-top: 2px solid var(--brand);
+  padding: 8px 4px;
+  text-align: center;
+  color: var(--text-900);
+  background: #eef2ff; /* neutral soft background */
+}
+
+/* Winner highlight */
+.session-table tfoot td.total-winner {
+  background: #d1fae5; /* greenish */
+  color: var(--green);
+}
+
+/* Loser highlight */
+.session-table tfoot td.total-loser {
+  background: #fee2e2; /* reddish */
+  color: var(--red);
+}

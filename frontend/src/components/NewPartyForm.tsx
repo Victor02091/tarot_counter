@@ -4,7 +4,11 @@ import { getPlayers, createGameSession, type Player } from "../services/api";
 import "./NewPartyForm.css";
 
 interface NewPartyFormProps {
-  onNext: (data: { partyName: string | null; sessionId: number; players: { id: number; displayName: string }[] }) => void;
+  onNext: (data: {
+    partyName: string | null;
+    sessionId: number;
+    players: { id: number; displayName: string }[];
+  }) => void;
 }
 
 const NewPartyForm: React.FC<NewPartyFormProps> = ({ onNext }) => {
@@ -44,7 +48,7 @@ const NewPartyForm: React.FC<NewPartyFormProps> = ({ onNext }) => {
         const nameA = `${a.last_name} ${a.first_name}`.toLowerCase();
         const nameB = `${b.last_name} ${b.first_name}`.toLowerCase();
         return nameA.localeCompare(nameB);
-      })
+      }),
     );
   };
 
@@ -79,7 +83,8 @@ const NewPartyForm: React.FC<NewPartyFormProps> = ({ onNext }) => {
           if (seen.has(name)) {
             duplicatesExist = true;
             const prevIdx = seen.get(name)!;
-            displayNames[prevIdx] = `${selectedPlayers[prevIdx].first_name} ${selectedPlayers[prevIdx].last_name.slice(0, letterCount)}.`;
+            displayNames[prevIdx] =
+              `${selectedPlayers[prevIdx].first_name} ${selectedPlayers[prevIdx].last_name.slice(0, letterCount)}.`;
             return `${p.first_name} ${p.last_name.slice(0, letterCount)}.`;
           } else {
             seen.set(name, idx);
@@ -96,13 +101,14 @@ const NewPartyForm: React.FC<NewPartyFormProps> = ({ onNext }) => {
         displayName: displayNames[idx],
       }));
 
-      onNext({ 
-        partyName: session.name, 
-        sessionId: session.id, 
-        players: playerData
+      onNext({
+        partyName: session.name,
+        sessionId: session.id,
+        players: playerData,
       });
-    } catch (err: any) {
-      alert("Erreur lors de la création de la partie: " + err.message);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      alert("Erreur lors de la création de la partie: " + errorMessage);
     }
   };
 
@@ -133,7 +139,9 @@ const NewPartyForm: React.FC<NewPartyFormProps> = ({ onNext }) => {
               >
                 <option value="">Joueur {i + 1}</option>
                 {allPlayers
-                  .filter((player) => !selectedOtherIds.includes(String(player.id)))
+                  .filter(
+                    (player) => !selectedOtherIds.includes(String(player.id)),
+                  )
                   .map((player) => (
                     <option key={player.id} value={String(player.id)}>
                       {player.first_name} {player.last_name}
@@ -169,6 +177,6 @@ const NewPartyForm: React.FC<NewPartyFormProps> = ({ onNext }) => {
       </button>
     </div>
   );
-}
+};
 
 export default NewPartyForm;
