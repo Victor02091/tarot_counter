@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getGameSessions, deleteGameSession } from "../services/api";
+import { getGameSessions, deleteGameSession, type GameSession } from "../services/api";
 import "./ResumeSessions.css";
 
 export default function ResumeSessions() {
-  const [sessions, setSessions] = useState([]);
+  const [sessions, setSessions] = useState<GameSession[]>([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
-  const [toDelete, setToDelete] = useState(null);
+  const [toDelete, setToDelete] = useState<number | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,19 +17,19 @@ export default function ResumeSessions() {
       .finally(() => setLoading(false));
   }, []);
 
-  const formatDate = (iso) =>
+  const formatDate = (iso: string) =>
     new Date(iso).toLocaleDateString("fr-FR", {
       day: "2-digit",
       month: "short",
       year: "numeric",
     });
 
-    const confirmDelete = async (id) => {
+    const confirmDelete = async (id: number) => {
       try {
         await deleteGameSession(id); 
         setSessions((prev) => prev.filter((s) => s.id !== id));
         setToDelete(null);
-      } catch (e) {
+      } catch (e: any) {
         alert(e.message || "Erreur lors de la suppression");
       }
     };

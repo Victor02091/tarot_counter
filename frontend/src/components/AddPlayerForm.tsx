@@ -1,16 +1,21 @@
-import { useState } from "react";
-import { addPlayer } from "../services/api";
-import "./AddPlayerForm.css"; // make sure you have this
+import React, { useState } from "react";
+import { addPlayer, type Player } from "../services/api";
+import "./AddPlayerForm.css";
 
-function AddPlayerForm({ onCancel, onSubmit }) {
+interface AddPlayerFormProps {
+  onCancel: () => void;
+  onSubmit: (player: Player) => void;
+}
+
+const AddPlayerForm: React.FC<AddPlayerFormProps> = ({ onCancel, onSubmit }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!firstName || !lastName) return; // button is disabled anyway
+    if (!firstName || !lastName) return;
 
     const newPlayer = { first_name: firstName, last_name: lastName };
     setLoading(true);

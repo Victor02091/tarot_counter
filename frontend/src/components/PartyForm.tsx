@@ -1,23 +1,37 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { submitPartyResult } from "../services/api";
+import { submitPartyResult, type PartyResult } from "../services/api";
 import "./PartyForm.css";
 
-function PartyForm({ players, sessionId }) {
+interface PlayerData {
+  id: number;
+  displayName: string;
+}
+
+interface PartyFormProps {
+  players: PlayerData[];
+  sessionId: string | number;
+}
+
+const PartyForm: React.FC<PartyFormProps> = ({ players, sessionId }) => {
   const navigate = useNavigate();
 
-  const [takerId, setTakerId] = useState(null);
-  const [calledId, setCalledId] = useState(null);
-  const [contract, setContract] = useState("");
-  const [oudlers, setOudlers] = useState(0);
-  const [points, setPoints] = useState(50);
-  const [petitPlayerId, setPetitPlayerId] = useState(null);
-  const [petitResult, setPetitResult] = useState("");
-  const [poignees, setPoignees] = useState({ simple: [], double: [], triple: [] });
-  const [miseres, setMiseres] = useState({ atout: [], tete: [] });
-  const [chlem, setChlem] = useState("");
+  const [takerId, setTakerId] = useState<number | null>(null);
+  const [calledId, setCalledId] = useState<number | null>(null);
+  const [contract, setContract] = useState<string>("");
+  const [oudlers, setOudlers] = useState<number>(0);
+  const [points, setPoints] = useState<number>(50);
+  const [petitPlayerId, setPetitPlayerId] = useState<number | null>(null);
+  const [petitResult, setPetitResult] = useState<string>("");
+  const [poignees, setPoignees] = useState<{ simple: number[]; double: number[]; triple: number[] }>({ 
+    simple: [], double: [], triple: [] 
+  });
+  const [miseres, setMiseres] = useState<{ atout: number[]; tete: number[] }>({ 
+    atout: [], tete: [] 
+  });
+  const [chlem, setChlem] = useState<string>("");
 
-  const toggleMisere = (type, playerId) => {
+  const toggleMisere = (type: "atout" | "tete", playerId: number) => {
     setMiseres((prev) => {
       const updated = prev[type].includes(playerId)
         ? prev[type].filter((p) => p !== playerId)
@@ -26,7 +40,7 @@ function PartyForm({ players, sessionId }) {
     });
   };
 
-  const togglePoignee = (type, playerId) => {
+  const togglePoignee = (type: "simple" | "double" | "triple", playerId: number) => {
     setPoignees((prev) => {
       const updated = prev[type].includes(playerId)
         ? prev[type].filter((p) => p !== playerId)
@@ -35,7 +49,7 @@ function PartyForm({ players, sessionId }) {
     });
   };
 
-  const togglePetit = (playerId) => {
+  const togglePetit = (playerId: number) => {
     if (petitPlayerId !== playerId) {
       setPetitPlayerId(playerId);
       setPetitResult("gagne");
@@ -63,7 +77,7 @@ function PartyForm({ players, sessionId }) {
   const contractWon = diff >= 0;
 
   const handleSubmit = async () => {
-    let missing = [];
+    let missing: string[] = [];
     if (takerId === null) missing.push("le preneur");
     if (calledId === null) missing.push("le joueur appelé");
     if (!contract) missing.push("le contrat");
@@ -76,20 +90,19 @@ function PartyForm({ players, sessionId }) {
     }
   
     // Map petitResult string to boolean or null
-    let petitWon = null;
+    let petitWon: boolean | null = null;
     if (petitResult === "gagne") petitWon = true;
     else if (petitResult === "perdu") petitWon = false;
   
-    const result = {
+    const result: PartyResult = {
       game_session_id: Number(sessionId),
-      taker_id: Number(takerId),
-      called_player_id: Number(calledId),
+      taker_id: takerId!,
+      called_player_id: calledId!,
       contract,
       oudlers,
       points,
-      petit_au_bout_player_id: petitPlayerId || null,
+      petit_au_bout_player_id: petitPlayerId,
       petit_au_bout_won: petitWon,
-      miseres,
       poignee_simple_players_ids: poignees.simple,
       poignee_double_players_ids: poignees.double,
       poignee_triple_players_ids: poignees.triple,
@@ -105,7 +118,6 @@ function PartyForm({ players, sessionId }) {
     } catch (err) {
       console.error("Erreur lors de l'envoi :", err);
       alert("Erreur lors de l'envoi du résultat");
-      return;
     }
   };
 
@@ -244,7 +256,7 @@ function PartyForm({ players, sessionId }) {
 
       <fieldset>
         <legend>Poignées</legend>
-        {["simple", "double", "triple"].map((type) => (
+        {(["simple", "double", "triple"] as const).map((type) => (
           <div key={type}>
             <label>
               {type === "simple" ? "Simple (8 atouts)" : type === "double" ? "Double (10 atouts)" : "Triple (13 atouts)"}

@@ -1,11 +1,16 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import AddPlayerForm from "./AddPlayerForm";
+import { type Player } from "../services/api";
 
-function HomePage({ onStart }) {
+interface HomePageProps {
+  onStart: () => void;
+}
+
+const HomePage: React.FC<HomePageProps> = ({ onStart }) => {
   const [showAddPlayer, setShowAddPlayer] = useState(false);
-  const [players, setPlayers] = useState([]);
+  const [players, setPlayers] = useState<Player[]>([]);
 
-  const handleAddPlayer = (player) => {
+  const handleAddPlayer = (player: Player) => {
     setPlayers([...players, player]);
     setShowAddPlayer(false);
   };
@@ -31,7 +36,7 @@ function HomePage({ onStart }) {
           <ul>
             {players.map((p, i) => (
               <li key={i}>
-                {p.firstName} {p.lastName}
+                {p.first_name} {p.last_name}
               </li>
             ))}
           </ul>

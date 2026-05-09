@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getGameSessionById } from "../services/api";
+import { getGameSessionById, type GameSession } from "../services/api";
 import "./SessionDetails.css";
 
 export default function SessionDetails() {
-  const { sessionId } = useParams();
-  const [session, setSession] = useState(null);
+  const { sessionId } = useParams<{ sessionId: string }>();
+  const [session, setSession] = useState<GameSession | null>(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (!sessionId) return;
     setLoading(true);
     setErr("");
     getGameSessionById(sessionId)

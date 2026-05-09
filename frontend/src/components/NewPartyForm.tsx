@@ -1,12 +1,16 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import AddPlayerForm from "./AddPlayerForm";
-import { getPlayers, createGameSession } from "../services/api";
+import { getPlayers, createGameSession, type Player } from "../services/api";
 import "./NewPartyForm.css";
 
-function NewPartyForm({ onNext }) {
+interface NewPartyFormProps {
+  onNext: (data: { partyName: string | null; sessionId: number; players: { id: number; displayName: string }[] }) => void;
+}
+
+const NewPartyForm: React.FC<NewPartyFormProps> = ({ onNext }) => {
   const [partyName, setPartyName] = useState("");
-  const [players, setPlayers] = useState(Array(5).fill(""));
-  const [allPlayers, setAllPlayers] = useState([]);
+  const [players, setPlayers] = useState<string[]>(Array(5).fill(""));
+  const [allPlayers, setAllPlayers] = useState<Player[]>([]);
   const [showAddPlayer, setShowAddPlayer] = useState(false);
 
   useEffect(() => {
@@ -26,13 +30,13 @@ function NewPartyForm({ onNext }) {
     fetchPlayers();
   }, []);
 
-  const handleChange = (index, value) => {
+  const handleChange = (index: number, value: string) => {
     const updated = [...players];
     updated[index] = value;
     setPlayers(updated);
   };
 
-  const handleAddPlayer = (player) => {
+  const handleAddPlayer = (player: Player) => {
     alert(`Nouveau profil créé: ${player.first_name} ${player.last_name}`);
     setShowAddPlayer(false);
     setAllPlayers((prev) =>
@@ -59,7 +63,7 @@ function NewPartyForm({ onNext }) {
 
       const selectedPlayers = players
         .map((id) => allPlayers.find((p) => String(p.id) === String(id)))
-        .filter(Boolean);
+        .filter((p): p is Player => !!p);
 
       let displayNames = selectedPlayers.map((p) => p.first_name);
 
@@ -67,14 +71,14 @@ function NewPartyForm({ onNext }) {
       let duplicatesExist = true;
 
       while (duplicatesExist) {
-        const seen = new Map();
+        const seen = new Map<string, number>();
         duplicatesExist = false;
 
         displayNames = displayNames.map((name, idx) => {
           const p = selectedPlayers[idx];
           if (seen.has(name)) {
             duplicatesExist = true;
-            const prevIdx = seen.get(name);
+            const prevIdx = seen.get(name)!;
             displayNames[prevIdx] = `${selectedPlayers[prevIdx].first_name} ${selectedPlayers[prevIdx].last_name.slice(0, letterCount)}.`;
             return `${p.first_name} ${p.last_name.slice(0, letterCount)}.`;
           } else {
@@ -97,7 +101,7 @@ function NewPartyForm({ onNext }) {
         sessionId: session.id, 
         players: playerData
       });
-    } catch (err) {
+    } catch (err: any) {
       alert("Erreur lors de la création de la partie: " + err.message);
     }
   };
