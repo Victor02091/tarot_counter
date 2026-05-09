@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import AddPlayerForm from "./AddPlayerForm";
 import { getPlayers, createGameSession, type Player } from "../services/api";
-import "./NewPartyForm.css";
 
 interface NewPartyFormProps {
   onNext: (data: {
@@ -116,24 +115,27 @@ const NewPartyForm: React.FC<NewPartyFormProps> = ({ onNext }) => {
 
   return (
     <div>
-      <h2>Démarrer une nouvelle partie</h2>
+      <h2 className="text-xl font-bold mb-4">Démarrer une nouvelle partie</h2>
 
-      <label>
-        Nom de la partie :
+      <div className="mb-6">
+        <label className="block mb-1 font-semibold">Nom de la partie :</label>
         <input
+          className="w-full p-3 border border-border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary/50"
           value={partyName}
           onChange={(e) => setPartyName(e.target.value)}
+          placeholder="Facultatif"
         />
-      </label>
+      </div>
 
-      <fieldset className="players-fieldset">
-        <legend>Joueurs</legend>
-        <div className="players-grid">
+      <fieldset className="mb-6 border border-border-subtle p-4 rounded-xl">
+        <legend className="px-2 font-bold text-lg">Joueurs</legend>
+        <div className="grid gap-4 mt-2">
           {players.map((selectedId, i) => {
             const selectedOtherIds = players.filter((_, idx) => idx !== i);
             return (
               <select
                 key={i}
+                className="w-full p-4 border-2 border-border-subtle rounded-lg text-lg min-h-[3.5rem] focus:outline-none focus:ring-2 focus:ring-brand-primary/50"
                 value={selectedId}
                 onChange={(e) => handleChange(i, e.target.value)}
               >
@@ -153,8 +155,12 @@ const NewPartyForm: React.FC<NewPartyFormProps> = ({ onNext }) => {
         </div>
 
         {!showAddPlayer && (
-          <div style={{ margin: "1rem 0" }}>
-            <button type="button" onClick={() => setShowAddPlayer(true)}>
+          <div className="mt-4">
+            <button
+              type="button"
+              className="w-full p-3 bg-white border border-brand-primary text-brand-primary rounded-lg font-semibold hover:bg-gray-50 transition-colors"
+              onClick={() => setShowAddPlayer(true)}
+            >
               Créer un nouveau profil de joueur
             </button>
           </div>
@@ -171,7 +177,11 @@ const NewPartyForm: React.FC<NewPartyFormProps> = ({ onNext }) => {
       <button
         onClick={handleContinue}
         disabled={!allPlayersSelected}
-        className={allPlayersSelected ? "active-button" : "disabled-button"}
+        className={`w-full p-4 rounded-lg font-bold text-lg transition-all ${
+          allPlayersSelected
+            ? "bg-brand-primary text-white hover:bg-brand-primary-hover shadow-md active:scale-[0.98]"
+            : "bg-gray-200 text-gray-500 cursor-not-allowed"
+        }`}
       >
         Commencer la partie
       </button>

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { addPlayer, type Player } from "../services/api";
-import "./AddPlayerForm.css";
 
 interface AddPlayerFormProps {
   onCancel: () => void;
@@ -40,36 +39,47 @@ const AddPlayerForm: React.FC<AddPlayerFormProps> = ({
   const isDisabled = loading || !firstName || !lastName;
 
   return (
-    <div className="add-player-form">
-      <h3>Ajouter un nouveau joueur</h3>
+    <div className="mt-4 p-4 border border-border-subtle rounded-lg">
+      <h3 className="text-lg font-semibold mb-4">Ajouter un nouveau joueur</h3>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Prénom:</label>
+        <div className="mb-4">
+          <label className="block mb-1 font-semibold">Prénom:</label>
           <input
             type="text"
+            className="w-full p-3 border border-border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary/50"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
             disabled={loading}
           />
         </div>
-        <div>
-          <label>Nom:</label>
+        <div className="mb-4">
+          <label className="block mb-1 font-semibold">Nom:</label>
           <input
             type="text"
+            className="w-full p-3 border border-border-subtle rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary/50"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
             disabled={loading}
           />
         </div>
-        <div className="form-buttons">
+        <div className="flex gap-4">
           <button
             type="submit"
             disabled={isDisabled}
-            className={isDisabled ? "disabled-button" : "active-button"}
+            className={`flex-1 p-3 rounded-lg font-semibold transition-colors ${
+              isDisabled
+                ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                : "bg-brand-primary text-white hover:bg-brand-primary-hover"
+            }`}
           >
             {loading ? "Ajout en cours..." : "Ajouter"}
           </button>
-          <button type="button" onClick={onCancel} disabled={loading}>
+          <button
+            type="button"
+            className="flex-1 p-3 border border-border-subtle rounded-lg font-semibold hover:bg-gray-50 transition-colors"
+            onClick={onCancel}
+            disabled={loading}
+          >
             Annuler
           </button>
         </div>
