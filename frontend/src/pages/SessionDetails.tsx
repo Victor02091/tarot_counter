@@ -1,23 +1,38 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getGameSessionById, type GameSession } from "../services/api";
+import {
+  getGameSessionApiGameSessionsSessionIdGet,
+  type GameSessionDetail,
+} from "../api";
 
 export default function SessionDetails() {
   const { sessionId } = useParams<{ sessionId: string }>();
-  const [session, setSession] = useState<GameSession | null>(null);
+  const [session, setSession] = useState<GameSessionDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!sessionId) return;
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setLoading(true);
-    setErr("");
-    getGameSessionById(sessionId)
-      .then(setSession)
-      .catch((e) => setErr(e.message || "Erreur de chargement"))
-      .finally(() => setLoading(false));
+    const fetchSession = async () => {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setLoading(true);
+      setErr("");
+      try {
+        const { data, error } = await getGameSessionApiGameSessionsSessionIdGet({
+          path: {
+            session_id: Number(sessionId),
+          },
+        });
+        if (error) throw error;
+        setSession(data || null);
+      } catch (e: any) {
+        setErr(e.message || "Erreur de chargement");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSession();
   }, [sessionId]);
 
   if (loading)

@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { submitPartyResult, type PartyResult } from "../services/api";
+import {
+  submitPartyResultApiPartyResultsPost,
+  type ContractType,
+  type ChlemType,
+} from "../api";
 
 interface PlayerData {
   id: number;
@@ -17,7 +21,7 @@ const PartyForm: React.FC<PartyFormProps> = ({ players, sessionId }) => {
 
   const [takerId, setTakerId] = useState<number | null>(null);
   const [calledId, setCalledId] = useState<number | null>(null);
-  const [contract, setContract] = useState<string>("");
+  const [contract, setContract] = useState<ContractType | "">("");
   const [oudlers, setOudlers] = useState<number>(0);
   const [points, setPoints] = useState<number>(50);
   const [petitPlayerId, setPetitPlayerId] = useState<number | null>(null);
@@ -35,7 +39,7 @@ const PartyForm: React.FC<PartyFormProps> = ({ players, sessionId }) => {
     atout: [],
     tete: [],
   });
-  const [chlem, setChlem] = useState<string>("");
+  const [chlem, setChlem] = useState<ChlemType | "">("");
 
   const toggleMisere = (type: "atout" | "tete", playerId: number) => {
     setMiseres((prev) => {
@@ -108,25 +112,28 @@ const PartyForm: React.FC<PartyFormProps> = ({ players, sessionId }) => {
     if (petitResult === "gagne") petitWon = true;
     else if (petitResult === "perdu") petitWon = false;
 
-    const result: PartyResult = {
-      game_session_id: Number(sessionId),
-      taker_id: takerId!,
-      called_player_id: calledId!,
-      contract,
-      oudlers,
-      points,
-      petit_au_bout_player_id: petitPlayerId,
-      petit_au_bout_won: petitWon,
-      poignee_simple_players_ids: poignees.simple,
-      poignee_double_players_ids: poignees.double,
-      poignee_triple_players_ids: poignees.triple,
-      misere_tete_players_ids: miseres.tete,
-      misere_atout_players_ids: miseres.atout,
-      chlem: chlem || null,
-    };
-
     try {
-      await submitPartyResult(result);
+      const { error } = await submitPartyResultApiPartyResultsPost({
+        body: {
+          game_session_id: Number(sessionId),
+          taker_id: takerId!,
+          called_player_id: calledId!,
+          contract: contract as ContractType,
+          oudlers,
+          points,
+          petit_au_bout_player_id: petitPlayerId,
+          petit_au_bout_won: petitWon,
+          poignee_simple_players_ids: poignees.simple,
+          poignee_double_players_ids: poignees.double,
+          poignee_triple_players_ids: poignees.triple,
+          misere_tete_players_ids: miseres.tete,
+          misere_atout_players_ids: miseres.atout,
+          chlem: chlem || null,
+        },
+      });
+
+      if (error) throw error;
+
       // Redirect to session details page
       navigate(`/session/${sessionId}`);
     } catch (err) {
@@ -186,7 +193,7 @@ const PartyForm: React.FC<PartyFormProps> = ({ players, sessionId }) => {
             <button
               key={c}
               className={getButtonClass(contract === c)}
-              onClick={() => setContract(c)}
+              onClick={() => setContract(c as ContractType)}
             >
               {c}
             </button>
@@ -365,17 +372,19 @@ const PartyForm: React.FC<PartyFormProps> = ({ players, sessionId }) => {
       <fieldset className="border border-border-subtle p-4 rounded-xl">
         <legend className="px-2 font-bold">Chelem</legend>
         <div className={groupClass}>
-          {["Annoncé et passé", "Non annoncé et passé", "Annoncé et chuté"].map(
-            (option) => (
-              <button
-                key={option}
-                className={getButtonClass(chlem === option)}
-                onClick={() => setChlem(chlem === option ? "" : option)}
-              >
-                {option}
-              </button>
-            ),
-          )}
+          {[
+            "Annoncé et passé",
+            "Non annoncé et passé",
+            "Annoncé et chuté",
+          ].map((option) => (
+            <button
+              key={option}
+              className={getButtonClass(chlem === option)}
+              onClick={() => setChlem(option as ChlemType)}
+            >
+              {option}
+            </button>
+          ))}
         </div>
       </fieldset>
 

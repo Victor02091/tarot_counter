@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import AddPlayerForm from "./AddPlayerForm";
-import { type Player } from "../services/api";
+import { type PlayerRead } from "../api";
 
 interface HomePageProps {
   onStart: () => void;
@@ -8,9 +8,9 @@ interface HomePageProps {
 
 const HomePage: React.FC<HomePageProps> = ({ onStart }) => {
   const [showAddPlayer, setShowAddPlayer] = useState(false);
-  const [players, setPlayers] = useState<Player[]>([]);
+  const [players, setPlayers] = useState<PlayerRead[]>([]);
 
-  const handleAddPlayer = (player: Player) => {
+  const handleAddPlayer = (player: PlayerRead) => {
     setPlayers([...players, player]);
     setShowAddPlayer(false);
   };

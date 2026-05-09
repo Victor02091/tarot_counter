@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import AddPlayerForm from "./AddPlayerForm";
-import { getPlayers, createGameSession, type Player } from "../services/api";
+import {
+  listPlayersApiPlayersGet,
+  createGameSessionApiGameSessionsPost,
+  type PlayerRead,
+} from "../api";
 
 interface NewPartyFormProps {
   onNext: (data: {
@@ -13,19 +17,22 @@ interface NewPartyFormProps {
 const NewPartyForm: React.FC<NewPartyFormProps> = ({ onNext }) => {
   const [partyName, setPartyName] = useState("");
   const [players, setPlayers] = useState<string[]>(Array(5).fill(""));
-  const [allPlayers, setAllPlayers] = useState<Player[]>([]);
+  const [allPlayers, setAllPlayers] = useState<PlayerRead[]>([]);
   const [showAddPlayer, setShowAddPlayer] = useState(false);
 
   useEffect(() => {
     const fetchPlayers = async () => {
       try {
-        const data = await getPlayers();
-        data.sort((a, b) => {
+        const { data, error } = await listPlayersApiPlayersGet();
+        if (error) throw error;
+        if (!data) return;
+
+        const sortedData = [...data].sort((a, b) => {
           const nameA = `${a.last_name} ${a.first_name}`.toLowerCase();
           const nameB = `${b.last_name} ${b.first_name}`.toLowerCase();
           return nameA.localeCompare(nameB);
         });
-        setAllPlayers(data);
+        setAllPlayers(sortedData);
       } catch (err) {
         console.error("Erreur lors du chargement des joueurs :", err);
       }
@@ -39,7 +46,7 @@ const NewPartyForm: React.FC<NewPartyFormProps> = ({ onNext }) => {
     setPlayers(updated);
   };
 
-  const handleAddPlayer = (player: Player) => {
+  const handleAddPlayer = (player: PlayerRead) => {
     alert(`Nouveau profil créé: ${player.first_name} ${player.last_name}`);
     setShowAddPlayer(false);
     setAllPlayers((prev) =>
@@ -55,18 +62,24 @@ const NewPartyForm: React.FC<NewPartyFormProps> = ({ onNext }) => {
     if (players.some((id) => id === "")) return;
 
     try {
-      const session = await createGameSession({
-        name: partyName || null,
-        player_1_id: parseInt(players[0]),
-        player_2_id: parseInt(players[1]),
-        player_3_id: parseInt(players[2]),
-        player_4_id: parseInt(players[3]),
-        player_5_id: parseInt(players[4]),
-      });
+      const { data: session, error } =
+        await createGameSessionApiGameSessionsPost({
+          body: {
+            name: partyName || null,
+            player_1_id: parseInt(players[0]),
+            player_2_id: parseInt(players[1]),
+            player_3_id: parseInt(players[2]),
+            player_4_id: parseInt(players[3]),
+            player_5_id: parseInt(players[4]),
+          },
+        });
+
+      if (error) throw error;
+      if (!session) throw new Error("No session returned");
 
       const selectedPlayers = players
         .map((id) => allPlayers.find((p) => String(p.id) === String(id)))
-        .filter((p): p is Player => !!p);
+        .filter((p): p is PlayerRead => !!p);
 
       let displayNames = selectedPlayers.map((p) => p.first_name);
 
@@ -101,7 +114,7 @@ const NewPartyForm: React.FC<NewPartyFormProps> = ({ onNext }) => {
       }));
 
       onNext({
-        partyName: session.name,
+        partyName: session.name ?? null,
         sessionId: session.id,
         players: playerData,
       });

@@ -1,15 +1,12 @@
 import React, { useState } from "react";
-import { addPlayer, type Player } from "../services/api";
+import { addPlayerApiPlayersPost, type PlayerRead } from "../api";
 
 interface AddPlayerFormProps {
   onCancel: () => void;
-  onSubmit: (player: Player) => void;
+  onSubmit: (player: PlayerRead) => void;
 }
 
-const AddPlayerForm: React.FC<AddPlayerFormProps> = ({
-  onCancel,
-  onSubmit,
-}) => {
+const AddPlayerForm: React.FC<AddPlayerFormProps> = ({ onCancel, onSubmit }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,13 +16,21 @@ const AddPlayerForm: React.FC<AddPlayerFormProps> = ({
 
     if (!firstName || !lastName) return;
 
-    const newPlayer = { first_name: firstName, last_name: lastName };
     setLoading(true);
 
     try {
-      const savedPlayer = await addPlayer(newPlayer);
+      const { data, error } = await addPlayerApiPlayersPost({
+        body: {
+          first_name: firstName,
+          last_name: lastName,
+        },
+      });
+
+      if (error) throw error;
+      if (!data) throw new Error("No data returned");
+
       alert("Joueur ajouté avec succès !");
-      onSubmit(savedPlayer);
+      onSubmit(data);
       setFirstName("");
       setLastName("");
     } catch (err) {

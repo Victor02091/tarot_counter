@@ -1,23 +1,31 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  getGameSessions,
-  deleteGameSession,
-  type GameSession,
-} from "../services/api";
+  getSessionsWithScoresApiGameSessionsGet,
+  deleteGameSessionApiGameSessionsSessionIdDelete,
+  type GameSessionSummary,
+} from "../api";
 
 export default function ResumeSessions() {
-  const [sessions, setSessions] = useState<GameSession[]>([]);
+  const [sessions, setSessions] = useState<GameSessionSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
   const [toDelete, setToDelete] = useState<number | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    getGameSessions()
-      .then((data) => setSessions(data))
-      .catch((e) => setErr(e.message || "Erreur de chargement"))
-      .finally(() => setLoading(false));
+    const fetchSessions = async () => {
+      try {
+        const { data, error } = await getSessionsWithScoresApiGameSessionsGet();
+        if (error) throw error;
+        setSessions(data || []);
+      } catch (e: any) {
+        setErr(e.message || "Erreur de chargement");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSessions();
   }, []);
 
   const formatDate = (iso: string) =>
@@ -29,7 +37,12 @@ export default function ResumeSessions() {
 
   const confirmDelete = async (id: number) => {
     try {
-      await deleteGameSession(id);
+      const { error } = await deleteGameSessionApiGameSessionsSessionIdDelete({
+        path: {
+          session_id: id,
+        },
+      });
+      if (error) throw error;
       setSessions((prev) => prev.filter((s) => s.id !== id));
       setToDelete(null);
     } catch (e: unknown) {
